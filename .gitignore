@@ -1,1 +1,9 @@
 node_modules
+dist
+build
+.env
+.env.*
+!.env.example
+.wrangler/
+supabase/.temp/
+.DS_Store

@@ -1,0 +1,654 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Propuesta Boda Interactiva</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: nav lateral fija en escritorio, barra de chips en móvil; contenido en una columna de lectura con tablas y diagrama a lo ancho. */
+:root{
+  --bg:#F1F2F6;
+  --surface:#FFFFFF;
+  --surface-2:#E7E9F0;
+  --ink:#1B2238;
+  --muted:#5B6478;
+  --line:#CFD4E0;
+  --accent:#8F7224;
+  --accent-ink:#6B541A;
+  --tint:#F6F0DC;
+  --good:#1F6B43; --good-bg:#DDF0E4;
+  --warn:#8A5300; --warn-bg:#FBEBD0;
+  --bad:#A3271F;  --bad-bg:#F9DDDA;
+  --font-display:"Young Serif", Georgia, "Times New Roman", serif;
+  --font-body:"IBM Plex Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono:"IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#13172A; --surface:#1B2036; --surface-2:#242A44; --ink:#E9EBF3; --muted:#A5ACC0; --line:#353D5A;
+    --accent:#D6B65C; --accent-ink:#E7CB78; --tint:#2A281E;
+    --good:#7ED3A0; --good-bg:#1D3A2B; --warn:#F3BC63; --warn-bg:#3F2E12; --bad:#F2958C; --bad-bg:#43211F;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#13172A; --surface:#1B2036; --surface-2:#242A44; --ink:#E9EBF3; --muted:#A5ACC0; --line:#353D5A;
+  --accent:#D6B65C; --accent-ink:#E7CB78; --tint:#2A281E;
+  --good:#7ED3A0; --good-bg:#1D3A2B; --warn:#F3BC63; --warn-bg:#3F2E12; --bad:#F2958C; --bad-bg:#43211F;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+a{color:var(--accent-ink);text-decoration-thickness:1px;text-underline-offset:2px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:400;line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,4.5vw,3.1rem)}
+h2{font-size:clamp(1.5rem,2.6vw,2rem)}
+h3{font-size:1.2rem}
+h4{font-size:1.02rem;font-family:var(--font-body);font-weight:600}
+p{margin:0}
+ul,ol{margin:0;padding-left:1.2em}
+li{margin:.25em 0}
+code,.mono{font-family:var(--font-mono);font-size:.9em}
+code{background:var(--surface-2);padding:.05em .35em;border-radius:4px}
+.eyebrow{font-size:.74rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.muted{color:var(--muted)}
+.lead{font-size:1.12rem;max-width:62ch}
+.prose{max-width:68ch}
+
+.shell{display:grid;grid-template-columns:1fr;min-height:100%}
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.nav-inner{display:flex;gap:.4rem;overflow-x:auto;padding-block:.6rem;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav a{white-space:nowrap;font-size:.84rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--line);border-radius:999px;background:var(--surface)}
+.nav a.active{color:var(--ink);border-color:var(--accent);background:var(--tint)}
+.nav .brand{display:none}
+main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:1.5rem 4rem;min-width:0}
+.content{max-width:1040px;margin:0 auto;display:grid;gap:3.2rem;min-width:0}
+section{display:grid;gap:1.1rem;min-width:0;scroll-margin-top:4.2rem}
+.sec-head{display:grid;gap:.35rem}
+
+@media (min-width:960px){
+  .shell{grid-template-columns:230px 1fr}
+  .nav{position:sticky;top:0;height:100vh;border-bottom:0;border-right:1px solid var(--line);align-self:start;overflow:auto}
+  .nav-inner{flex-direction:column;gap:.15rem;padding-block:1.6rem;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:16px}
+  .nav .brand{display:block;font-family:var(--font-display);font-size:1.05rem;margin-bottom:1rem;color:var(--ink)}
+  .nav a{border:0;background:transparent;border-radius:6px;padding:.4rem .6rem;white-space:normal}
+  .nav a.active{background:var(--tint);color:var(--ink)}
+  main{padding-block:2.5rem 5rem;padding-left:max(40px,env(safe-area-inset-left,0px));padding-right:max(40px,env(safe-area-inset-right,0px))}
+  section{scroll-margin-top:1rem}
+}
+
+/* Hero */
+.hero{display:grid;gap:1.2rem;padding-block:.5rem 1.5rem;border-bottom:1px solid var(--line)}
+.hero-meta{display:flex;flex-wrap:wrap;gap:.5rem 1.4rem;font-size:.86rem;color:var(--muted)}
+.thesis{border-left:3px solid var(--accent);padding:.6rem 1rem;background:var(--tint);max-width:70ch;font-size:1.05rem}
+
+/* Cards and grids */
+.grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
+.grid-2{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem;display:grid;gap:.55rem;align-content:start;min-width:0}
+.card h3{font-size:1.08rem}
+.card .num{font-family:var(--font-mono);font-size:.78rem;color:var(--muted)}
+.chip-row{display:flex;flex-wrap:wrap;gap:.5rem}
+.chip{font-size:.86rem;padding:.3rem .7rem;border-radius:999px;background:var(--surface);border:1px solid var(--line)}
+.chip strong{font-weight:600}
+
+/* Module cards */
+.mod{display:grid;gap:.7rem}
+.mod dl{display:grid;gap:.5rem;margin:0}
+.mod dt{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.mod dd{margin:0}
+.mod .limit{font-family:var(--font-mono);font-size:.82rem;color:var(--muted);border-top:1px dashed var(--line);padding-top:.5rem}
+
+/* Tables */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface);min-width:0}
+table{border-collapse:collapse;width:100%;font-size:.93rem;min-width:620px}
+th,td{text-align:left;padding:.65rem .85rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.76rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--surface-2)}
+tr:last-child td{border-bottom:0}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill{display:inline-flex;align-items:center;gap:.35em;font-size:.8rem;font-weight:600;padding:.15em .6em;border-radius:999px;white-space:nowrap}
+.pill.good{color:var(--good);background:var(--good-bg)}
+.pill.warn{color:var(--warn);background:var(--warn-bg)}
+.pill.bad{color:var(--bad);background:var(--bad-bg)}
+
+/* Facts */
+.facts{display:grid;gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}
+.fact{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1rem;padding:.7rem 1rem;border-bottom:1px solid var(--line);align-items:baseline}
+.fact:last-child{border-bottom:0}
+.fact .v{font-family:var(--font-mono);font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:500}
+.fact.key{background:var(--tint)}
+
+/* Diagram */
+figure{margin:0;display:grid;gap:.6rem}
+.diagram{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:.6rem}
+.diagram svg{display:block;min-width:900px;width:100%;height:auto;color:var(--ink)}
+figcaption{font-size:.9rem;color:var(--muted);max-width:70ch}
+.dg-box{fill:var(--surface);stroke:currentColor;stroke-width:1.2}
+.dg-box.heavy{fill:var(--tint);stroke:var(--accent);stroke-width:1.8}
+.dg-box.light{fill:var(--surface-2);stroke:var(--line)}
+.dg-t{font-family:var(--font-body);font-size:12.5px;fill:currentColor}
+.dg-t.b{font-weight:600}
+.dg-s{font-family:var(--font-body);font-size:11px;fill:var(--muted)}
+.dg-l{font-family:var(--font-mono);font-size:10.5px;fill:var(--muted)}
+.dg-a{stroke:currentColor;stroke-width:1.3;fill:none}
+.dg-a.heavy{stroke:var(--accent);stroke-width:2.2}
+.dg-a.dash{stroke-dasharray:4 4}
+.dg-arrow{fill:currentColor}
+.dg-arrow.heavy{fill:var(--accent)}
+
+/* Timeline */
+.steps{display:grid;gap:.6rem;counter-reset:s}
+.step{display:grid;grid-template-columns:2.2rem minmax(0,1fr);gap:.8rem;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.8rem 1rem}
+.step .k{font-family:var(--font-mono);font-size:.85rem;color:var(--accent-ink);font-weight:500;padding-top:.15rem}
+.step .t{display:grid;gap:.25rem}
+.step .when{font-size:.82rem;color:var(--muted)}
+
+.callout{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;padding:.8rem 1rem;max-width:72ch}
+.check{display:grid;gap:.4rem}
+.check li{list-style:none;position:relative;padding-left:1.5em}
+.check li::before{content:"";position:absolute;left:0;top:.45em;width:.85em;height:.85em;border:1.5px solid var(--muted);border-radius:3px}
+footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padding-top:1.2rem}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+
+</head>
+<body>
+<div class="shell">
+  <nav class="nav" aria-label="Secciones">
+    <div class="nav-inner">
+      <div class="brand">Propuesta Boda Interactiva</div>
+      <a href="#resumen">Resumen</a>
+      <a href="#hallazgos">Lo que dejó la investigación</a>
+      <a href="#decisiones">Decisiones tomadas</a>
+      <a href="#invitados">Lo que verán los invitados</a>
+      <a href="#arquitectura">Arquitectura y costo</a>
+      <a href="#pico">El pico de la noche</a>
+      <a href="#modulos">Módulos blindados</a>
+      <a href="#capacidad">Capacidad vs. límites</a>
+      <a href="#fallas">Si algo falla</a>
+      <a href="#preparacion">Preparación</a>
+      <a href="#fases">Fases</a>
+      <a href="#siguiente">Siguiente paso</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="content">
+
+      <section id="resumen" class="hero">
+        <div class="sec-head">
+          <p class="eyebrow">Propuesta técnica · 28 de octubre de 2026</p>
+          <h1>La página de la boda, pensada para la noche en que todos suben fotos a la vez</h1>
+        </div>
+        <p class="lead">Una web propia para ~200 invitados, con entrada por etiqueta NFC o QR, álbum colaborativo, muro en vivo, libro de visitas con audio y petición de canciones. Sin pago mensual: los únicos gastos son el dominio y las etiquetas.</p>
+        <div class="thesis">
+          <strong>Por qué no se cae:</strong> el día de la boda casi no hay servidor que saturar. La página vive en una red de distribución (CDN), cada foto viaja directo del celular al almacenamiento, y la base de datos sólo recibe una fila de texto por archivo. Lo único que puede saturarse es el WiFi del salón, y para eso hay un plan.
+        </div>
+        <div class="hero-meta">
+          <span>Investigación completa en el repo: <code>docs/boda/01-investigacion-base.md</code></span>
+          <span>Stack: React + Vite · Supabase Free · Cloudflare Pages + R2</span>
+        </div>
+      </section>
+
+      <section id="hallazgos">
+        <div class="sec-head">
+          <p class="eyebrow">01</p>
+          <h2>Lo que dejó claro la investigación</h2>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>El NFC sólo abre una URL</h3>
+            <p>La etiqueta no guarda fotos ni "sube" nada. El celular lee una dirección web y abre el navegador. Toda la experiencia ocurre en tu página. iPhone XS en adelante y la mayoría de los Android lo leen sin app; los iPhone 7, 8 y X y los Android básicos no, así que siempre va un QR al lado.</p>
+          </div>
+          <div class="card">
+            <h3>Importar de Instagram no es viable</h3>
+            <p>La API abierta de Instagram se apagó en diciembre de 2024. Lo que queda exige cuenta profesional, revisión de Meta y no incluye stories. Lo que sí funciona: que el invitado suba fotos y videos directo desde su galería, y como extra, que pegue el link de su post para mostrarlo embebido.</p>
+          </div>
+          <div class="card">
+            <h3>Nadie instala una app en una boda</h3>
+            <p>Todas las plataformas comerciales (Wedibox, Kululu, GuestCam) convergieron en lo mismo: QR, navegador, sin cuenta. La subida múltiple desde la galería funciona en iPhone y Android; Safari convierte HEIC a JPEG solo si se le pide bien.</p>
+          </div>
+          <div class="card">
+            <h3>El plan gratuito de Supabase no alcanza para los archivos</h3>
+            <p>Da 1 GB de almacenamiento y se pausa tras una semana sin uso. Sirve perfecto para la base de datos y el tiempo real; los archivos pesados van a Cloudflare R2, que regala 10 GB y no cobra por descargas.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="decisiones">
+        <div class="sec-head">
+          <p class="eyebrow">02</p>
+          <h2>Decisiones tomadas</h2>
+        </div>
+        <div class="chip-row">
+          <span class="chip"><strong>Alcance:</strong> MVP recomendado</span>
+          <span class="chip"><strong>NFC:</strong> token por invitado + etiquetas por mesa y puntos fijos</span>
+          <span class="chip"><strong>Stack:</strong> React + Vite, proyecto Supabase nuevo</span>
+          <span class="chip"><strong>Invitados:</strong> ~200</span>
+          <span class="chip"><strong>Costo mensual:</strong> cero (sin Supabase Pro)</span>
+        </div>
+        <p class="prose muted">Lo pendiente de tu lado: la fecha y el salón (para medir la red), el dominio que quieren, y si prefieres Cloudflare R2 (puede pedir una tarjeta registrada aunque no cobre) o Backblaze B2 como alternativa.</p>
+      </section>
+
+      <section id="invitados">
+        <div class="sec-head">
+          <p class="eyebrow">03</p>
+          <h2>Lo que verán los invitados</h2>
+          <p class="prose muted">Nueve pantallas. Todas abren desde la misma URL de la etiqueta y ninguna pide cuenta ni app.</p>
+        </div>
+        <div class="grid">
+          <div class="card"><span class="num">/t/&lt;token&gt;</span><h3>Entrada personalizada</h3><p>"Hola Mariana, tu mesa es la 7". Recuerda al invitado en el navegador y sugiere agregar la página al inicio del celular.</p></div>
+          <div class="card"><span class="num">/subir</span><h3>Subir fotos y videos</h3><p>Selección múltiple desde la galería, barra de progreso, reintento automático si se corta la señal.</p></div>
+          <div class="card"><span class="num">/album</span><h3>Álbum colaborativo</h3><p>Lo aprobado, con filtro "mis fotos" y acceso con PIN de la boda para que no sea público.</p></div>
+          <div class="card"><span class="num">/tv</span><h3>Muro en vivo</h3><p>Pantalla o proyector del salón que rota las fotos aprobadas y los mensajes, actualizado en segundos.</p></div>
+          <div class="card"><span class="num">/mensajes</span><h3>Libro de visitas</h3><p>Mensaje escrito o de voz de hasta 90 segundos. Una tablet en modo kiosko para quien no use su celular.</p></div>
+          <div class="card"><span class="num">/canciones</span><h3>Petición de canciones</h3><p>Pide y vota; el DJ ve la lista ordenada por votos en su propio celular.</p></div>
+          <div class="card"><span class="num">/rsvp</span><h3>Confirmación</h3><p>Asistencia, acompañantes, alergias y canción. Enlace por familia enviado por WhatsApp.</p></div>
+          <div class="card"><span class="num">/info · /regalos</span><h3>Logística y regalos</h3><p>Itinerario, mapas, hoteles, dress code, WiFi del salón, mesa de regalos y CLABE copiable.</p></div>
+          <div class="card"><span class="num">/admin</span><h3>Panel de ustedes</h3><p>Moderación en un toque, invitados y tokens, hojas de QR para imprimir, exportación para grabar etiquetas, modo fiesta.</p></div>
+        </div>
+        <p class="prose muted">Fase 2, después de que el MVP funcione: retos fotográficos tipo bingo, cámara desechable digital, trivia en vivo, predicciones para abrir en el aniversario, posts embebidos por link.</p>
+      </section>
+
+      <section id="arquitectura">
+        <div class="sec-head">
+          <p class="eyebrow">04</p>
+          <h2>Arquitectura y costo</h2>
+          <p class="prose muted">Cada pieza en un plan gratuito, elegida por lo que aguanta y por lo que no cobra.</p>
+        </div>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Capa</th><th>Servicio</th><th>Qué hace aquí</th><th>Costo</th></tr></thead>
+            <tbody>
+              <tr><td>Página y funciones</td><td>Cloudflare Pages + Pages Functions</td><td>Sirve la web desde la CDN; funciones pequeñas que firman subidas y registran metadatos.</td><td class="n">0</td></tr>
+              <tr><td>Archivos</td><td>Cloudflare R2</td><td>Fotos, videos y audios. 10 GB gratis, descargas gratis; el excedente cuesta 0.015 USD por GB al mes.</td><td class="n">≈ 3 a 5 MXN/mes si se llega a 25 GB</td></tr>
+              <tr><td>Datos, tiempo real, acceso admin</td><td>Supabase Free</td><td>Sólo metadatos (una fila por archivo), Realtime para la pantalla, login de ustedes.</td><td class="n">0</td></tr>
+              <tr><td>Anti-pausa</td><td>GitHub Actions programado o Worker con cron</td><td>Un ping cada 3 días evita que Supabase Free se pause por inactividad.</td><td class="n">0</td></tr>
+              <tr><td>Dominio</td><td>Registrador + DNS en Cloudflare</td><td>URL corta para las etiquetas y dominio propio para las imágenes.</td><td class="n">300 a 500 MXN/año</td></tr>
+              <tr><td>Etiquetas NFC</td><td>NTAG213, ~250 piezas</td><td>200 invitados + mesas + puntos fijos + 20 % de repuesto.</td><td class="n">2,500 a 6,000 MXN una vez</td></tr>
+              <tr><td>Impresión</td><td>QR y letreros</td><td>Respaldo para celulares sin NFC.</td><td class="n">500 a 1,500 MXN una vez</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="pico">
+        <div class="sec-head">
+          <p class="eyebrow">05</p>
+          <h2>El pico de la noche</h2>
+          <p class="prose muted">El momento crítico son los diez minutos después del primer baile o del beso, cuando todos sacan el celular. Estos son los números con los que se diseñó el sistema.</p>
+        </div>
+        <div class="grid-2">
+          <div class="facts" aria-label="Supuestos del pico">
+            <div class="fact"><span>Invitados</span><span class="v">200</span></div>
+            <div class="fact"><span>Ventana crítica</span><span class="v">10 min</span></div>
+            <div class="fact"><span>Suben fotos en esa ventana (60 % × 5 fotos)</span><span class="v">600 fotos</span></div>
+            <div class="fact"><span>Peso tras comprimir en el celular</span><span class="v">≈ 0.5 MB c/u · 300 MB</span></div>
+            <div class="fact"><span>Suben un video (40 % × 40 MB)</span><span class="v">80 videos · 3.2 GB</span></div>
+            <div class="fact"><span>Llamadas a funciones (firmas + registros)</span><span class="v">≈ 1,000 · 1.7 por segundo</span></div>
+            <div class="fact key"><span>Subida que exigiría el salón si todos mandan video a la vez</span><span class="v">≈ 43 Mbps</span></div>
+          </div>
+          <div class="callout">
+            <h4>La lectura de esos números</h4>
+            <p>Para el backend, 1.7 llamadas por segundo y 300 MB en diez minutos no son nada. El riesgo real es el enlace de subida del salón si 80 personas mandan un video al mismo tiempo. Por eso el sistema trata las fotos y los videos de forma distinta: las fotos salen de inmediato; los videos se encolan en el celular y suben con menor prioridad, o más tarde si ustedes activan "fotos ahora, videos después" desde el panel.</p>
+          </div>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 1060 330" role="img" aria-label="Ruta de una foto el día de la boda: el celular comprime, pide una URL firmada a una función, sube el archivo directo a R2 y registra una fila de metadatos en Supabase; la pantalla del salón y el panel de moderación reciben los cambios por Realtime; el álbum en los celulares lee miniaturas desde la CDN.">
+              <defs>
+                <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="dg-arrow"/></marker>
+                <marker id="arwh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="dg-arrow heavy"/></marker>
+              </defs>
+
+              <!-- Fila superior -->
+              <rect class="dg-box" x="20" y="50" width="180" height="80" rx="8"/>
+              <text class="dg-t b" x="110" y="78" text-anchor="middle">Celular del invitado</text>
+              <text class="dg-s" x="110" y="96" text-anchor="middle">comprime y hace miniaturas</text>
+              <text class="dg-l" x="110" y="114" text-anchor="middle">×200 a la vez</text>
+
+              <rect class="dg-box" x="300" y="50" width="200" height="80" rx="8"/>
+              <text class="dg-t b" x="400" y="78" text-anchor="middle">Función (Cloudflare)</text>
+              <text class="dg-s" x="400" y="96" text-anchor="middle">valida token · límite de tasa</text>
+              <text class="dg-s" x="400" y="112" text-anchor="middle">firma la URL en ≈ 20 ms</text>
+
+              <rect class="dg-box" x="600" y="50" width="190" height="80" rx="8"/>
+              <text class="dg-t b" x="695" y="78" text-anchor="middle">Supabase (Postgres)</text>
+              <text class="dg-s" x="695" y="96" text-anchor="middle">sólo metadatos</text>
+              <text class="dg-l" x="695" y="114" text-anchor="middle">1 fila ≈ 1 KB por archivo</text>
+
+              <rect class="dg-box" x="900" y="50" width="140" height="80" rx="8"/>
+              <text class="dg-t b" x="970" y="78" text-anchor="middle">Pantalla /tv</text>
+              <text class="dg-s" x="970" y="96" text-anchor="middle">rota lo aprobado</text>
+              <text class="dg-l" x="970" y="114" text-anchor="middle">1 conexión</text>
+
+              <!-- Fila inferior -->
+              <rect class="dg-box light" x="20" y="220" width="180" height="80" rx="8"/>
+              <text class="dg-t b" x="110" y="248" text-anchor="middle">Álbum en celulares</text>
+              <text class="dg-s" x="110" y="266" text-anchor="middle">miniaturas 480 px ≈ 40 KB</text>
+              <text class="dg-l" x="110" y="284" text-anchor="middle">lista paginada, 30 por página</text>
+
+              <rect class="dg-box heavy" x="300" y="220" width="200" height="80" rx="8"/>
+              <text class="dg-t b" x="400" y="248" text-anchor="middle">Cloudflare R2</text>
+              <text class="dg-s" x="400" y="266" text-anchor="middle">archivos: fotos, video, audio</text>
+              <text class="dg-l" x="400" y="284" text-anchor="middle">servido por CDN, caché 1 año</text>
+
+              <rect class="dg-box" x="900" y="220" width="140" height="80" rx="8"/>
+              <text class="dg-t b" x="970" y="248" text-anchor="middle">Panel /admin</text>
+              <text class="dg-s" x="970" y="266" text-anchor="middle">aprueba en un toque</text>
+              <text class="dg-l" x="970" y="284" text-anchor="middle">1 a 2 personas</text>
+
+              <!-- 1 y 3: celular ↔ función -->
+              <line class="dg-a" x1="200" y1="90" x2="298" y2="90" marker-end="url(#arw)"/>
+              <text class="dg-l" x="249" y="80" text-anchor="middle">1 · pide URL firmada</text>
+              <text class="dg-l" x="249" y="106" text-anchor="middle">3 · confirma metadatos</text>
+
+              <!-- 2: celular → R2 directo (ruta pesada) -->
+              <polyline class="dg-a heavy" points="110,130 110,180 400,180 400,218" marker-end="url(#arwh)"/>
+              <text class="dg-l" x="255" y="172" text-anchor="middle">2 · PUT directo del archivo, sin pasar por ningún servidor</text>
+              <text class="dg-l" x="255" y="196" text-anchor="middle">0.5 MB por foto · hasta 50 MB por video · reanudable</text>
+
+              <!-- función → supabase -->
+              <line class="dg-a" x1="500" y1="90" x2="598" y2="90" marker-end="url(#arw)"/>
+              <text class="dg-l" x="549" y="80" text-anchor="middle">insert</text>
+              <text class="dg-l" x="549" y="106" text-anchor="middle">por lote</text>
+
+              <!-- supabase → tv -->
+              <line class="dg-a" x1="790" y1="90" x2="898" y2="90" marker-end="url(#arw)"/>
+              <text class="dg-l" x="844" y="80" text-anchor="middle">Realtime</text>
+              <text class="dg-l" x="844" y="106" text-anchor="middle">≤ 5 conexiones</text>
+
+              <!-- supabase ↔ admin -->
+              <polyline class="dg-a" points="750,130 750,260 898,260" marker-start="url(#arw)" marker-end="url(#arw)"/>
+              <text class="dg-l" x="824" y="250" text-anchor="middle">cola de pendientes</text>
+              <text class="dg-l" x="824" y="276" text-anchor="middle">aprueba / rechaza</text>
+
+              <!-- R2 → álbum -->
+              <line class="dg-a dash" x1="300" y1="260" x2="202" y2="260" marker-end="url(#arw)"/>
+              <text class="dg-l" x="250" y="250" text-anchor="middle">miniaturas vía CDN</text>
+              <text class="dg-l" x="250" y="276" text-anchor="middle">sin tocar Supabase</text>
+            </svg>
+          </div>
+          <figcaption>Ruta de una foto la noche de la boda. La única flecha gruesa, el archivo en sí, va del celular directo a R2. Las funciones y la base de datos sólo ven texto corto, y los 200 celulares no mantienen conexiones abiertas: sólo la pantalla y el panel usan Realtime.</figcaption>
+        </figure>
+      </section>
+
+      <section id="modulos">
+        <div class="sec-head">
+          <p class="eyebrow">06</p>
+          <h2>Módulos y cómo se blinda cada uno</h2>
+          <p class="prose muted">Por bloque: qué hace, qué decisión lo mantiene de pie durante el pico, y el límite del plan gratuito que importa.</p>
+        </div>
+        <div class="grid-2">
+
+          <div class="card mod">
+            <span class="num">Módulo 1</span>
+            <h3>Página estática en la CDN</h3>
+            <dl>
+              <dt>Qué hace</dt><dd>Toda la interfaz (inicio, info, álbum, subir, mensajes) es HTML, JS y CSS precompilados por Vite.</dd>
+              <dt>Cómo aguanta el pico</dt><dd>Se sirve desde cientos de nodos de Cloudflare, no desde un servidor nuestro. 200 personas abriendo la página a la vez es tráfico trivial. Como PWA, la segunda visita carga desde el caché del celular aunque la red esté lenta.</dd>
+            </dl>
+            <p class="limit">Límite: ninguno práctico; ancho de banda ilimitado en Pages.</p>
+          </div>
+
+          <div class="card mod">
+            <span class="num">Módulo 2</span>
+            <h3>Entrada por token NFC / QR</h3>
+            <dl>
+              <dt>Qué hace</dt><dd>Resuelve el token de la etiqueta a un invitado o mesa y lo guarda en el navegador.</dd>
+              <dt>Cómo aguanta el pico</dt><dd>Se resuelve una sola vez por celular y queda en localStorage; el resto de la noche no vuelve a consultarse. El token lleva una firma, así que la función puede validarlo incluso si la base de datos no responde.</dd>
+            </dl>
+            <p class="limit">Límite: 100,000 llamadas/día a funciones; se usan ≈ 300.</p>
+          </div>
+
+          <div class="card mod">
+            <span class="num">Módulo 3 · el crítico</span>
+            <h3>Subida de archivos</h3>
+            <dl>
+              <dt>Qué hace</dt><dd>Toma fotos y videos de la galería y los deja en R2.</dd>
+              <dt>Cómo aguanta el pico</dt><dd>
+                <ul>
+                  <li>Compresión y miniaturas en el celular: una foto de 4 MB sale en 0.5 MB. Se reduce 85 % el tráfico antes de que exista.</li>
+                  <li>Subida directa a R2 con URL firmada: ningún servidor nuestro toca el archivo.</li>
+                  <li>Cola local con 2 subidas simultáneas por celular, reintentos con espera creciente y reanudación si se corta la señal.</li>
+                  <li>Videos limitados a 90 s / 50 MB y con menor prioridad que las fotos.</li>
+                  <li>Límite por token (p. ej. 60 archivos cada 10 min) calculado en Postgres, para que un solo celular no inunde el sistema.</li>
+                </ul>
+              </dd>
+            </dl>
+            <p class="limit">Límite: 1,000,000 escrituras/mes en R2; se usan ≈ 3,000 el día de la boda.</p>
+          </div>
+
+          <div class="card mod">
+            <span class="num">Módulo 4</span>
+            <h3>Funciones y base de datos</h3>
+            <dl>
+              <dt>Qué hace</dt><dd>Firma las subidas, registra una fila por archivo, guarda mensajes, canciones y RSVP.</dd>
+              <dt>Cómo aguanta el pico</dt><dd>Cada llamada dura milisegundos y mueve menos de 1 KB. Los metadatos se registran por lote (una llamada por tanda de fotos, no por foto). Índices en estado y fecha para que las consultas del álbum y la cola de moderación sean instantáneas aunque haya 5,000 filas.</dd>
+            </dl>
+            <p class="limit">Límite: 500 MB de base de datos; se usan ≈ 10 MB.</p>
+          </div>
+
+          <div class="card mod">
+            <span class="num">Módulo 5</span>
+            <h3>Muro en vivo y tiempo real</h3>
+            <dl>
+              <dt>Qué hace</dt><dd>La pantalla del salón muestra cada foto aprobada en segundos.</dd>
+              <dt>Cómo aguanta el pico</dt><dd>Sólo la pantalla y el panel se suscriben a Realtime: 5 conexiones, no 200. Los celulares nunca abren canales en vivo; el álbum se refresca al entrar o cada 60 segundos. La pantalla precarga las siguientes imágenes y sigue rotando lo que ya tiene si se cae la red.</dd>
+            </dl>
+            <p class="limit">Límite: 200 conexiones simultáneas y 2 millones de mensajes/mes; se usan 5 y ≈ 3,000.</p>
+          </div>
+
+          <div class="card mod">
+            <span class="num">Módulo 6</span>
+            <h3>Álbum (lecturas)</h3>
+            <dl>
+              <dt>Qué hace</dt><dd>Muestra lo aprobado a los invitados.</dd>
+              <dt>Cómo aguanta el pico</dt><dd>La lista llega paginada (30 por página) desde Supabase y pesa unos kilobytes. Las imágenes son miniaturas de 480 px (≈ 40 KB) servidas por la CDN de Cloudflare con caché de un año; la versión grande sólo se carga al abrir una foto. Carga diferida al hacer scroll.</dd>
+            </dl>
+            <p class="limit">Límite: 10 millones de lecturas/mes en R2; se usan ≈ 60,000 en toda la noche.</p>
+          </div>
+
+          <div class="card mod">
+            <span class="num">Módulo 7</span>
+            <h3>Libro de visitas y canciones</h3>
+            <dl>
+              <dt>Qué hace</dt><dd>Audio de hasta 90 s, texto, peticiones y votos.</dd>
+              <dt>Cómo aguanta el pico</dt><dd>El audio usa la misma ruta directa a R2 que las fotos (un audio de 90 s pesa ≈ 1.5 MB). Los votos se guardan con una llave única por invitado y canción, así que repetir el toque no duplica nada. Son volúmenes pequeños comparados con las fotos.</dd>
+            </dl>
+            <p class="limit">Límite: compartido con los módulos 3 y 4; sin impacto propio.</p>
+          </div>
+
+          <div class="card mod">
+            <span class="num">Módulo 8</span>
+            <h3>Moderación y modo fiesta</h3>
+            <dl>
+              <dt>Qué hace</dt><dd>Una persona de confianza aprueba o rechaza desde su celular.</dd>
+              <dt>Cómo aguanta el pico</dt><dd>Un interruptor "aprobar fotos automáticamente esta noche" para que la pantalla no se quede vacía si la cola crece; videos y mensajes siguen pasando por revisión. Otro interruptor, "fotos ahora, videos después", retrasa los videos si el WiFi del salón se satura. Botón de reportar en cada foto para retirar algo al instante.</dd>
+            </dl>
+            <p class="limit">Límite: el humano. Por eso el panel es de un toque por elemento y con acciones en bloque.</p>
+          </div>
+
+          <div class="card mod">
+            <span class="num">Módulo 9</span>
+            <h3>Red del salón y degradación controlada</h3>
+            <dl>
+              <dt>Qué hace</dt><dd>Asume que la señal va a fallar en algún momento.</dd>
+              <dt>Cómo aguanta el pico</dt><dd>QR de conexión al WiFi en cada mesa. La página ya está en caché cuando se pierde la red; las subidas esperan en el celular y continúan solas; la pantalla no se queda en negro. Si la red del salón es mala de origen, el plan cambia antes de imprimir nada: menos video, más foto, o un hotspot propio para la pantalla.</dd>
+            </dl>
+            <p class="limit">Límite: el enlace de subida del salón. Se mide en el ensayo, no se supone.</p>
+          </div>
+
+          <div class="card mod">
+            <span class="num">Módulo 10</span>
+            <h3>Monitoreo y plan B</h3>
+            <dl>
+              <dt>Qué hace</dt><dd>Les dice en vivo si todo va bien.</dd>
+              <dt>Cómo aguanta el pico</dt><dd>El panel muestra subidas por minuto, errores y tamaño de la cola. Si algo se rompe de verdad, hay un sobre impreso con un QR a un álbum compartido de Google Photos: la fiesta no depende de que el software funcione. Al día siguiente, un script compara lo que hay en R2 con la base de datos y repara cualquier fila faltante.</dd>
+            </dl>
+            <p class="limit">Límite: ninguno técnico; es el seguro.</p>
+          </div>
+
+        </div>
+      </section>
+
+      <section id="capacidad">
+        <div class="sec-head">
+          <p class="eyebrow">07</p>
+          <h2>Capacidad estimada frente a los límites gratuitos</h2>
+          <p class="prose muted">Estimaciones para el día completo de la boda con los supuestos de arriba. Los límites son los publicados por cada proveedor en octubre de 2026.</p>
+        </div>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Recurso</th><th>Uso estimado</th><th>Límite gratuito</th><th>Estado</th></tr></thead>
+            <tbody>
+              <tr><td>Llamadas a funciones (Cloudflare)</td><td class="n">≈ 5,000 / día</td><td class="n">100,000 / día</td><td><span class="pill good">✓ holgado</span></td></tr>
+              <tr><td>Escrituras en R2</td><td class="n">≈ 3,000</td><td class="n">1,000,000 / mes</td><td><span class="pill good">✓ holgado</span></td></tr>
+              <tr><td>Lecturas en R2 (miniaturas)</td><td class="n">≈ 60,000</td><td class="n">10,000,000 / mes</td><td><span class="pill good">✓ holgado</span></td></tr>
+              <tr><td>Almacenamiento en R2</td><td class="n">15 a 25 GB</td><td class="n">10 GB</td><td><span class="pill warn">! excede, ≈ 3 a 5 MXN/mes</span></td></tr>
+              <tr><td>Base de datos (Supabase)</td><td class="n">≈ 10 MB</td><td class="n">500 MB</td><td><span class="pill good">✓ holgado</span></td></tr>
+              <tr><td>Conexiones Realtime simultáneas</td><td class="n">≤ 5</td><td class="n">200</td><td><span class="pill good">✓ holgado por diseño</span></td></tr>
+              <tr><td>Mensajes Realtime</td><td class="n">≈ 3,000</td><td class="n">2,000,000 / mes</td><td><span class="pill good">✓ holgado</span></td></tr>
+              <tr><td>Salida de datos API (Supabase)</td><td class="n">≈ 50 MB</td><td class="n">5 GB / mes</td><td><span class="pill good">✓ holgado</span></td></tr>
+              <tr><td>Pausa de Supabase Free por inactividad</td><td class="n">7 días sin uso</td><td class="n">ping cada 3 días</td><td><span class="pill good">✓ cubierto</span></td></tr>
+              <tr><td>Enlace de subida del salón</td><td class="n">hasta 43 Mbps si todos suben video</td><td class="n">depende del venue</td><td><span class="pill bad">✕ riesgo real, se mide en sitio</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="fallas">
+        <div class="sec-head">
+          <p class="eyebrow">08</p>
+          <h2>Qué pasa si algo falla</h2>
+        </div>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Falla</th><th>Lo que ve el invitado</th><th>Lo que hace el sistema</th><th>Lo que hacen ustedes</th></tr></thead>
+            <tbody>
+              <tr><td>Se cae el WiFi del salón</td><td>La página sigue abierta; la subida muestra "se enviará cuando haya señal".</td><td>Cola local en el celular; reintenta solo. La pantalla sigue rotando.</td><td>Nada. Si dura, activar "videos después".</td></tr>
+              <tr><td>Supabase no responde</td><td>Puede subir fotos; el álbum muestra lo último cargado.</td><td>Los archivos siguen llegando a R2 porque la firma no depende de la base. Los metadatos quedan pendientes y se registran al volver.</td><td>Al día siguiente correr la reconciliación R2 → base.</td></tr>
+              <tr><td>R2 no responde</td><td>Subida en espera.</td><td>Cola y reintentos; nada se pierde porque el archivo sigue en el celular.</td><td>Nada.</td></tr>
+              <tr><td>Un invitado sube de más o algo inapropiado</td><td>Mensaje de "espera un momento" si excede el límite.</td><td>Límite por token; rechazo en moderación; botón reportar lo oculta al instante.</td><td>Un toque en el panel.</td></tr>
+              <tr><td>La cola de moderación crece demasiado</td><td>La pantalla tarda en mostrar su foto.</td><td>Interruptor de aprobación automática de fotos.</td><td>Activarlo; revisar videos y mensajes después.</td></tr>
+              <tr><td>Cloudflare completo fuera de servicio</td><td>Nada abre.</td><td>Es una caída global, muy improbable.</td><td>Sobre impreso con QR a Google Photos.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="preparacion">
+        <div class="sec-head">
+          <p class="eyebrow">09</p>
+          <h2>Preparación antes del día</h2>
+          <p class="prose muted">Nada de esto se supone; se prueba.</p>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Prueba de carga (dos semanas antes)</h3>
+            <ul>
+              <li>Script que simula 200 celulares subiendo 600 fotos de 0.5 MB y 80 videos de 40 MB en 10 minutos, con red limitada.</li>
+              <li>Metas: firma en menos de 200 ms, menos de 0.5 % de errores, foto en pantalla en menos de 30 s.</li>
+              <li>Se repite con Supabase apagado a propósito para confirmar que las subidas siguen y la reconciliación funciona.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Ensayo en el salón (una semana antes)</h3>
+            <ul>
+              <li>10 personas con celulares distintos: iPhone reciente, iPhone 7/8/X, Samsung, Motorola o Xiaomi, con y sin funda.</li>
+              <li>Medir la subida real del WiFi del venue y la cobertura celular en salón y jardín.</li>
+              <li>Etiquetas NFC de prueba y QR impresos; probar la pantalla con el cable o hotspot definitivo.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Lista del día</h3>
+            <ul class="check">
+              <li>Supabase activo (keepalive verificado esa mañana) y cuota de R2 revisada.</li>
+              <li>Moderador asignado con el panel abierto y el interruptor de modo fiesta a la mano.</li>
+              <li>Laptop para la pantalla con cable o hotspot propio; cargador.</li>
+              <li>QR de WiFi en cada mesa; 20 etiquetas NFC de repuesto.</li>
+              <li>Sobre de plan B con el QR de Google Photos.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Después de la fiesta</h3>
+            <ul>
+              <li>Reconciliación R2 → base y respaldo completo a disco.</li>
+              <li>Fotos oficiales del fotógrafo al mismo álbum; agradecimientos por token.</li>
+              <li>Decidir cuánto vive la página (1 a 2 años) y exportar todo antes de apagarla.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="fases">
+        <div class="sec-head">
+          <p class="eyebrow">10</p>
+          <h2>Fases de construcción</h2>
+          <p class="prose muted">Cada paso deja algo verificable en un celular real antes de seguir.</p>
+        </div>
+        <div class="steps">
+          <div class="step"><span class="k">0</span><div class="t"><strong>Guardar la base</strong><span>Commit del documento de investigación y de las decisiones tomadas en el repo.</span><span class="when">Al aprobar</span></div></div>
+          <div class="step"><span class="k">1</span><div class="t"><strong>Migración a Vite y despliegue vacío</strong><span>Limpiar dependencias de Expo, rutas, diseño base, primera URL en Cloudflare Pages.</span><span class="when">Semana 1</span></div></div>
+          <div class="step"><span class="k">2</span><div class="t"><strong>Supabase y datos</strong><span>Proyecto nuevo, tablas, seguridad por filas, datos de prueba, keepalive.</span><span class="when">Semana 1</span></div></div>
+          <div class="step"><span class="k">3</span><div class="t"><strong>Subida directa a R2</strong><span>Compresión, miniaturas, URL firmada, cola con reintentos, pantalla "Subir".</span><span class="when">Semana 2</span></div></div>
+          <div class="step"><span class="k">4</span><div class="t"><strong>Álbum, moderación y pantalla</strong><span>Galería paginada, panel de un toque, muro en vivo con Realtime.</span><span class="when">Semana 2 a 3</span></div></div>
+          <div class="step"><span class="k">5</span><div class="t"><strong>Tokens e invitados</strong><span>Entrada personalizada, "tu mesa", importación de invitados, hojas de QR, exportación para grabar etiquetas.</span><span class="when">Semana 3</span></div></div>
+          <div class="step"><span class="k">6</span><div class="t"><strong>Libro de visitas y canciones</strong><span>Grabador de voz, mensajes, peticiones con votos y vista para el DJ.</span><span class="when">Semana 4</span></div></div>
+          <div class="step"><span class="k">7</span><div class="t"><strong>Info, RSVP, regalos, PWA</strong><span>Páginas de logística, confirmación por familia, mesa de regalos, instalación en el celular y vistas previas para WhatsApp.</span><span class="when">Semana 4 a 5</span></div></div>
+          <div class="step"><span class="k">8</span><div class="t"><strong>Pruebas de campo</strong><span>Prueba de carga, ensayo en el salón, compra final de etiquetas.</span><span class="when">Semana 6</span></div></div>
+        </div>
+      </section>
+
+      <section id="siguiente">
+        <div class="sec-head">
+          <p class="eyebrow">11</p>
+          <h2>Siguiente paso</h2>
+        </div>
+        <div class="callout">
+          <p>Para arrancar la fase 0 y 1 necesito tres cosas de tu lado: la fecha y el salón de la boda, el dominio que quieren (o que lo elija yo con una propuesta), y confirmar si usamos Cloudflare R2 o Backblaze B2 para los archivos. Con eso, el primer entregable es la migración a Vite con una URL funcionando en tu celular.</p>
+        </div>
+      </section>
+
+      <footer>
+        <p>Fuentes y detalle técnico en <code>docs/boda/01-investigacion-base.md</code> dentro del repositorio. Los límites de los planes gratuitos cambian; se vuelven a verificar antes de la prueba de carga.</p>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.nav a'));
+  var map = {};
+  links.forEach(function(a){ var id = a.getAttribute('href').slice(1); map[id] = a; });
+  var sections = Object.keys(map).map(function(id){ return document.getElementById(id); }).filter(Boolean);
+  function setActive(id){
+    links.forEach(function(a){ a.classList.toggle('active', a === map[id]); });
+    var a = map[id]; if (a && a.scrollIntoView && window.innerWidth < 960) {
+      try { a.scrollIntoView({block:'nearest', inline:'center', behavior:'smooth'}); } catch(e) {}
+    }
+  }
+  if ('IntersectionObserver' in window) {
+    var visible = {};
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ visible[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0; });
+      var best = null, bestV = 0;
+      sections.forEach(function(s){ if ((visible[s.id] || 0) > bestV) { bestV = visible[s.id]; best = s.id; } });
+      if (best) setActive(best);
+    }, {rootMargin: '-20% 0px -60% 0px', threshold: [0, 0.2, 0.5, 1]});
+    sections.forEach(function(s){ io.observe(s); });
+  }
+  if (sections.length) setActive(sections[0].id);
+})();
+</script>
+
+</body>
+</html>
