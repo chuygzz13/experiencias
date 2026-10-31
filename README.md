@@ -2,7 +2,8 @@
 
 Este repositorio se está convirtiendo en la página web de una boda para ~200 invitados: entrada por etiqueta NFC o QR,
 álbum colaborativo de fotos y videos, muro en vivo en la pantalla del salón, libro de visitas con audio, petición de
-canciones, RSVP, logística y mesa de regalos. Sin costo mensual: Cloudflare Pages + R2 para la web y los archivos,
+canciones, RSVP, logística y mesa de regalos, más un panel de administración al que sólo entra el dueño (contenido
+completo, lista de invitados, confirmaciones). Sin costo mensual: Cloudflare Pages + R2 para la web y los archivos,
 Supabase Free para datos y tiempo real.
 
 ## Estado

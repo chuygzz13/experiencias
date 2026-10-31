@@ -14,7 +14,7 @@ las políticas de la base, no en el navegador.
 | Exposición de fotos de menores o de quien no quiere aparecer | Media | Alto | Moderación, `noindex`, PIN, borrado a petición, retención |
 | Abuso que agote cuotas gratuitas | Baja | Medio | Límite de tasa, tamaño máximo, MIME permitidos |
 | Secretos commiteados o expuestos en el frontend | Media (error humano) | Alto | `.env` ignorado, service role sólo en funciones, revisión antes de cada commit |
-| Panel de admin accesible sin login | Baja | Alto | Auth magic link + tabla `admins` + RLS `is_admin()` |
+| Panel de admin accesible sin login o por otra persona | Baja | Alto | Auth magic link con registro público desactivado + lista blanca de un correo + tabla `admins` de una fila + RLS `is_admin()` |
 
 ## 2. Tokens de etiqueta
 
@@ -57,12 +57,21 @@ las políticas de la base, no en el navegador.
   sirve contenido retirado más allá del borde de la CDN (purga manual disponible).
 - Sin listado público del bucket; sin credenciales S3 en el frontend.
 
-## 6. Panel de administración
+## 6. Panel de administración: sólo el dueño
 
-- Login con magic link de Supabase Auth; sólo correos listados en `ADMIN_EMAILS` se dan de alta en `admins`.
-- Rutas `/admin/*` verifican sesión y `is_admin()`; sin sesión redirigen al login sin revelar nada.
-- Sesiones cortas en el celular del moderador (cerrar sesión al terminar la noche).
-- Acciones destructivas (borrar en bloque, desactivar todos los tokens) con confirmación dentro de la interfaz.
+- Un único administrador: el dueño del proyecto. `ADMIN_EMAIL` es el único correo de la lista blanca y `admins` tiene una
+  sola fila. Registro público desactivado en Supabase Auth ("Allow new users to sign up" apagado) y proveedores sociales
+  apagados; el enlace mágico sólo se envía a ese correo (hook de Auth o verificación en el frontend más la tabla `admins`).
+- Rutas `/admin/*` verifican sesión y `is_admin()`; sin sesión redirigen al login sin revelar nada; con sesión de otro
+  correo tampoco muestran nada (RLS devuelve vacío).
+- Opcional y recomendado: segundo factor TOTP de Supabase Auth (incluido en el plan Free) para el correo del dueño.
+- Sesión corta en el celular (cerrar sesión al terminar la noche); nunca iniciar sesión en un dispositivo prestado.
+- Acciones destructivas (borrar en bloque, desactivar todos los tokens, purgar R2) con confirmación dentro de la interfaz.
+- Delegación opcional: si el dueño quiere que alguien modere la noche de la boda, se crea un rol `moderador` temporal con
+  políticas limitadas a cambiar `status` en `media` y `messages`, sin lectura de `guests`, `rsvps` ni `settings`, y se
+  revoca al día siguiente. Por defecto no existe.
+- El DJ nunca entra a `/admin`: `/dj` es de sólo lectura, protegido con `settings.clave_dj`, y expone únicamente `song_rank`.
+- La pantalla `/tv` abre con `settings.clave_tv` y sólo lee contenido aprobado.
 
 ## 7. Frontend
 
@@ -104,7 +113,7 @@ las políticas de la base, no en el navegador.
 - [ ] `429` al superar el límite de tasa; la UI lo explica.
 - [ ] PUT prefirmado con otro `Content-Type` es rechazado por R2.
 - [ ] Cabeceras verificadas con un escáner de cabeceras HTTP; CSP sin errores en consola.
-- [ ] `/admin` sin sesión redirige; con sesión de un correo no admin, no muestra nada.
+- [ ] `/admin` sin sesión redirige; un correo distinto al del dueño no recibe enlace ni acceso; registro público desactivado en Auth.
 - [ ] `grep` de secretos en el repo limpio; `npm audit` sin críticas.
 - [ ] Aviso de privacidad visible y botón reportar funcionando.
 

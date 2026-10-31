@@ -166,6 +166,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
       <a href="#hallazgos">Lo que dejó la investigación</a>
       <a href="#decisiones">Decisiones tomadas</a>
       <a href="#invitados">Lo que verán los invitados</a>
+      <a href="#admin">Tu panel</a>
       <a href="#arquitectura">Arquitectura y costo</a>
       <a href="#pico">El pico de la noche</a>
       <a href="#modulos">Módulos blindados</a>
@@ -185,7 +186,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
           <p class="eyebrow">Propuesta técnica · 28 de octubre de 2026</p>
           <h1>La página de la boda, pensada para la noche en que todos suben fotos a la vez</h1>
         </div>
-        <p class="lead">Una web propia para ~200 invitados, con entrada por etiqueta NFC o QR, álbum colaborativo, muro en vivo, libro de visitas con audio y petición de canciones. Sin pago mensual: los únicos gastos son el dominio y las etiquetas.</p>
+        <p class="lead">Una web propia para ~200 invitados, con entrada por etiqueta NFC o QR, álbum colaborativo, muro en vivo, libro de visitas con audio y petición de canciones, más un panel de administración al que sólo tú entras. Sin pago mensual: los únicos gastos son el dominio y las etiquetas.</p>
         <div class="thesis">
           <strong>Por qué no se cae:</strong> el día de la boda casi no hay servidor que saturar. La página vive en una red de distribución (CDN), cada foto viaja directo del celular al almacenamiento, y la base de datos sólo recibe una fila de texto por archivo. Lo único que puede saturarse es el WiFi del salón, y para eso hay un plan.
         </div>
@@ -231,6 +232,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
           <span class="chip"><strong>Stack:</strong> React + Vite, proyecto Supabase nuevo</span>
           <span class="chip"><strong>Invitados:</strong> ~200</span>
           <span class="chip"><strong>Costo mensual:</strong> cero (sin Supabase Pro)</span>
+          <span class="chip"><strong>Administrador:</strong> sólo tú</span>
         </div>
         <p class="prose muted">Lo pendiente de tu lado: la fecha y el salón (para medir la red), el dominio que quieren, y si prefieres Cloudflare R2 (puede pedir una tarjeta registrada aunque no cobre) o Backblaze B2 como alternativa.</p>
       </section>
@@ -250,14 +252,86 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
           <div class="card"><span class="num">/canciones</span><h3>Petición de canciones</h3><p>Pide y vota; el DJ ve la lista ordenada por votos en su propio celular.</p></div>
           <div class="card"><span class="num">/rsvp</span><h3>Confirmación</h3><p>Asistencia, acompañantes, alergias y canción. Enlace por familia enviado por WhatsApp.</p></div>
           <div class="card"><span class="num">/info · /regalos</span><h3>Logística y regalos</h3><p>Itinerario, mapas, hoteles, dress code, WiFi del salón, mesa de regalos y CLABE copiable.</p></div>
-          <div class="card"><span class="num">/admin</span><h3>Panel de ustedes</h3><p>Moderación en un toque, invitados y tokens, hojas de QR para imprimir, exportación para grabar etiquetas, modo fiesta.</p></div>
+          <div class="card"><span class="num">/admin</span><h3>Tu panel (sólo tú)</h3><p>Moderación, todo el contenido, lista de invitados, confirmaciones, etiquetas y modo fiesta. Detalle en la siguiente sección.</p></div>
         </div>
         <p class="prose muted">Fase 2, después de que el MVP funcione: retos fotográficos tipo bingo, cámara desechable digital, trivia en vivo, predicciones para abrir en el aniversario, posts embebidos por link.</p>
       </section>
 
-      <section id="arquitectura">
+      <section id="admin">
         <div class="sec-head">
           <p class="eyebrow">04</p>
+          <h2>Tu panel de administración: sólo tú entras</h2>
+          <p class="prose muted">Todo lo anterior es para los invitados. Esta parte de la página es únicamente tuya: entras con tu correo y nadie más puede registrarse. Desde aquí ves el contenido de todos, cargas la lista de invitados y sigues las confirmaciones.</p>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Acceso exclusivo</h3>
+            <ul>
+              <li>Entras con un enlace mágico enviado a tu correo; no hay contraseña que olvidar ni que compartir.</li>
+              <li>El registro público está desactivado y la lista blanca tiene un solo correo: el tuyo. Cualquier otro correo no recibe acceso.</li>
+              <li>La base de datos sólo entrega los datos completos a tu sesión; para cualquier otra persona las tablas de invitados y confirmaciones no existen.</li>
+              <li>Opcional: segundo factor con app de códigos (gratuito en Supabase) y cierre de sesión al terminar la noche.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Ver el contenido de todos</h3>
+            <ul>
+              <li>Fotos, videos, audios y mensajes de todos los invitados en cualquier estado: pendiente, aprobado o rechazado.</li>
+              <li>Filtros por invitado, mesa, tipo y estado; búsqueda por nombre.</li>
+              <li>Descarga individual o de todo el álbum en ZIP.</li>
+              <li>Los invitados ven en el álbum sólo lo aprobado; tú lo ves todo.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Lista de invitados</h3>
+            <ul>
+              <li>Alta uno por uno o importación de un CSV con nombre, apellido, familia o grupo, mesa, boletos (acompañantes permitidos), menú y si es menor.</li>
+              <li>Edición directa en la tabla, asignación y cambio de mesa, vista por mesa con lugares ocupados.</li>
+              <li>Generación del token NFC/QR de cada invitado y marca de "invitación enviada".</li>
+              <li>Botón de WhatsApp con el mensaje y la URL personal de cada invitado listos para enviar.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Confirmaciones</h3>
+            <ul>
+              <li>Tablero con confirmados, no asisten, pendientes, acompañantes y total de personas.</li>
+              <li>Alergias y menús agregados para el banquete; filtros por mesa y familia.</li>
+              <li>Recordatorio por WhatsApp a quienes no han respondido, con un toque.</li>
+              <li>Exportación a CSV para el salón y el catering.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Moderación y modo fiesta</h3>
+            <ul>
+              <li>Cola de pendientes con aprobar o rechazar en un toque y acciones en bloque.</li>
+              <li>Interruptores: aprobar fotos automáticamente esta noche; fotos ahora, videos después.</li>
+              <li>Si esa noche prefieres no estar pegado al celular, puedes dar un acceso temporal de moderador limitado a aprobar y rechazar, sin ver invitados ni confirmaciones, y quitarlo al día siguiente. Por defecto, nadie más.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Canciones, DJ y estado</h3>
+            <ul>
+              <li>Tú ves todas las peticiones y votos. El DJ recibe una página aparte, de sólo lectura y con clave, con el ranking y nada más.</li>
+              <li>Panel de estado: subidas por minuto, errores, tamaño de la cola, uso de almacenamiento y si la base de datos está activa.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Quién</th><th>Cómo entra</th><th>Qué ve</th></tr></thead>
+            <tbody>
+              <tr><td>Invitado</td><td>Etiqueta NFC o QR (token) y PIN de la boda para el álbum</td><td>Su inicio, subir, álbum aprobado, mensajes, canciones, info y su propia confirmación</td></tr>
+              <tr><td>Pantalla del salón</td><td>Clave de la pantalla</td><td>Sólo lo aprobado</td></tr>
+              <tr><td>DJ</td><td>Clave de sólo lectura</td><td>Ranking de canciones, sin datos de invitados</td></tr>
+              <tr><td>Tú</td><td>Enlace mágico a tu correo</td><td>Todo: contenido en cualquier estado, invitados, confirmaciones, etiquetas, moderación y estado del sistema</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="arquitectura">
+        <div class="sec-head">
+          <p class="eyebrow">05</p>
           <h2>Arquitectura y costo</h2>
           <p class="prose muted">Cada pieza en un plan gratuito, elegida por lo que aguanta y por lo que no cobra.</p>
         </div>
@@ -279,7 +353,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
 
       <section id="pico">
         <div class="sec-head">
-          <p class="eyebrow">05</p>
+          <p class="eyebrow">06</p>
           <h2>El pico de la noche</h2>
           <p class="prose muted">El momento crítico son los diez minutos después del primer baile o del beso, cuando todos sacan el celular. Estos son los números con los que se diseñó el sistema.</p>
         </div>
@@ -381,7 +455,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
 
       <section id="modulos">
         <div class="sec-head">
-          <p class="eyebrow">06</p>
+          <p class="eyebrow">07</p>
           <h2>Módulos y cómo se blinda cada uno</h2>
           <p class="prose muted">Por bloque: qué hace, qué decisión lo mantiene de pie durante el pico, y el límite del plan gratuito que importa.</p>
         </div>
@@ -469,7 +543,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
             <span class="num">Módulo 8</span>
             <h3>Moderación y modo fiesta</h3>
             <dl>
-              <dt>Qué hace</dt><dd>Una persona de confianza aprueba o rechaza desde su celular.</dd>
+              <dt>Qué hace</dt><dd>Tú apruebas o rechazas desde tu celular; si quieres, delegas un acceso temporal de moderador esa noche.</dd>
               <dt>Cómo aguanta el pico</dt><dd>Un interruptor "aprobar fotos automáticamente esta noche" para que la pantalla no se quede vacía si la cola crece; videos y mensajes siguen pasando por revisión. Otro interruptor, "fotos ahora, videos después", retrasa los videos si el WiFi del salón se satura. Botón de reportar en cada foto para retirar algo al instante.</dd>
             </dl>
             <p class="limit">Límite: el humano. Por eso el panel es de un toque por elemento y con acciones en bloque.</p>
@@ -500,7 +574,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
 
       <section id="capacidad">
         <div class="sec-head">
-          <p class="eyebrow">07</p>
+          <p class="eyebrow">08</p>
           <h2>Capacidad estimada frente a los límites gratuitos</h2>
           <p class="prose muted">Estimaciones para el día completo de la boda con los supuestos de arriba. Los límites son los publicados por cada proveedor en octubre de 2026.</p>
         </div>
@@ -525,7 +599,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
 
       <section id="fallas">
         <div class="sec-head">
-          <p class="eyebrow">08</p>
+          <p class="eyebrow">09</p>
           <h2>Qué pasa si algo falla</h2>
         </div>
         <div class="tablewrap">
@@ -545,7 +619,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
 
       <section id="preparacion">
         <div class="sec-head">
-          <p class="eyebrow">09</p>
+          <p class="eyebrow">10</p>
           <h2>Preparación antes del día</h2>
           <p class="prose muted">Nada de esto se supone; se prueba.</p>
         </div>
@@ -589,7 +663,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
 
       <section id="fases">
         <div class="sec-head">
-          <p class="eyebrow">10</p>
+          <p class="eyebrow">11</p>
           <h2>Fases de construcción</h2>
           <p class="prose muted">Cada paso deja algo verificable en un celular real antes de seguir.</p>
         </div>
@@ -608,7 +682,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
 
       <section id="siguiente">
         <div class="sec-head">
-          <p class="eyebrow">11</p>
+          <p class="eyebrow">12</p>
           <h2>Siguiente paso</h2>
         </div>
         <div class="callout">

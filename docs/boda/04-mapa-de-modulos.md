@@ -8,7 +8,7 @@ Estados: `pendiente` · `en curso` · `listo` · `fase 2`.
 ```
 M0 Base (Vite, router, diseño, Supabase, R2)
  ├─ M1 Entrada por token ──────────────┐
- ├─ M2 Subida ──► M3 Moderación ──► M4 Muro /tv
+ ├─ M2 Subida ──► M3 Panel admin (sólo el dueño) ──► M4 Muro /tv
  │                        └──────────► M5 Álbum
  ├─ M6 Libro de visitas (usa M2 para audio, M3 para aprobar)
  ├─ M7 Canciones
@@ -56,15 +56,16 @@ M11 Operación: keepalive, monitoreo, reconciliación, plan B
 | Listo cuando | En iPhone y Android reales: 10 fotos HEIC/JPEG y 1 video suben con progreso; apagar WiFi a mitad y volver no pierde nada; el límite de tasa responde `429` y la UI lo muestra bien; `media` tiene filas `uploaded=true` |
 | Estado | pendiente |
 
-## M3 · Moderación
+## M3 · Panel de administración (sólo el dueño)
 
 | Campo | Detalle |
 |---|---|
-| Ruta | `/admin`, `/admin/cola` |
-| Código | `src/pages/admin/Login.jsx`, `src/pages/admin/Cola.jsx`, `src/components/admin/ReviewCard.jsx`, `src/lib/admin.js` |
-| Tablas | `media`, `messages` (update directo con RLS de admin), `settings` (interruptores `auto_approve_photos`, `defer_videos`) |
+| Ruta | `/admin` (login), `/admin/cola`, `/admin/contenido`, `/admin/estado`. Las secciones de invitados, confirmaciones y etiquetas se describen en M8 y M10 pero viven en este mismo panel |
+| Código | `src/pages/admin/Login.jsx`, `src/pages/admin/Layout.jsx` (guardia de sesión + `is_admin`), `src/pages/admin/Cola.jsx`, `src/pages/admin/Contenido.jsx`, `src/pages/admin/Estado.jsx`, `src/components/admin/ReviewCard.jsx`, `src/lib/admin.js` |
+| Función | `functions/api/admin/purge.ts` (borra en R2; verifica JWT e `is_admin()`) |
+| Tablas | `admins` (una fila), `media`, `messages`, `songs` (todas las filas con RLS de admin), `settings` (interruptores `auto_approve_photos`, `defer_videos`; claves `clave_tv`, `clave_dj`) |
 | Depende de | M0, M2 |
-| Listo cuando | Login por magic link; cola con aprobar/rechazar en un toque y en bloque; rechazar borra en R2 (vía función `/api/admin/purge` o Supabase webhook); interruptores de modo fiesta funcionan; usable en celular |
+| Listo cuando | Sólo el correo del dueño recibe enlace mágico y entra (otro correo no); cola con aprobar/rechazar en un toque y en bloque; `/admin/contenido` muestra todo en cualquier estado con filtros por estado, tipo, invitado y mesa, búsqueda y descarga; rechazar borra en R2; interruptores de modo fiesta funcionan; usable en celular |
 | Estado | pendiente |
 
 ## M4 · Muro en vivo
@@ -105,24 +106,24 @@ M11 Operación: keepalive, monitoreo, reconciliación, plan B
 
 | Campo | Detalle |
 |---|---|
-| Ruta | `/canciones`, `/admin/canciones` |
-| Código | `src/pages/Canciones.jsx`, `src/pages/admin/Canciones.jsx` |
+| Ruta | `/canciones`, `/admin/canciones`, `/dj` (sólo lectura con clave para el DJ) |
+| Código | `src/pages/Canciones.jsx`, `src/pages/admin/Canciones.jsx`, `src/pages/Dj.jsx` |
 | Función | `functions/api/songs.ts`, `functions/api/songs/vote.ts` |
 | Tablas | `songs`, `song_votes`, `song_rank` |
 | Depende de | M0, M1 |
-| Listo cuando | Pedir, votar y ver ranking; vista DJ ordenada por votos con exportación CSV; voto repetido no duplica |
+| Listo cuando | Pedir, votar y ver ranking; `/dj` con clave muestra el ranking sin datos de invitados; `/admin/canciones` con exportación CSV; voto repetido no duplica |
 | Estado | pendiente |
 
 ## M8 · RSVP
 
 | Campo | Detalle |
 |---|---|
-| Ruta | `/rsvp` |
-| Código | `src/pages/Rsvp.jsx` |
+| Ruta | `/rsvp` (invitado), `/admin/confirmaciones` (dueño) |
+| Código | `src/pages/Rsvp.jsx`, `src/pages/admin/Confirmaciones.jsx` |
 | Función | `functions/api/rsvp.ts` |
-| Tablas | `rsvps`, `guests` |
+| Tablas | `rsvps`, `guests`, vista `rsvp_resumen` |
 | Depende de | M0, M1, M10 |
-| Listo cuando | Confirmar por token de invitado; buscador por nombre como respaldo; `/admin/rsvp` con conteo y exportación |
+| Listo cuando | Confirmar por token de invitado (acompañantes ≤ boletos); buscador por nombre como respaldo; `/admin/confirmaciones` con tablero (confirmados, no asisten, pendientes, acompañantes, total de personas, alergias), filtros por mesa y familia, recordatorio por WhatsApp a pendientes y exportación CSV |
 | Estado | pendiente |
 
 ## M9 · Información y regalos
@@ -145,7 +146,7 @@ M11 Operación: keepalive, monitoreo, reconciliación, plan B
 | Librerías | `qrcode` (generación de QR en el navegador), `papaparse` (CSV) |
 | Tablas | `guests`, `tables`, `tags` |
 | Depende de | M0 |
-| Listo cuando | Importar CSV de invitados y mesas; generar tokens por invitado, por mesa y por punto fijo; hoja de QR imprimible (A4/carta) y export `nombre,mesa,url` para grabar etiquetas; desactivar un token |
+| Listo cuando | Alta manual y edición en tabla; importar CSV de invitados y mesas (nombre, apellido, familia, mesa, boletos, menú, menor); vista por mesa; generar tokens por invitado, por mesa y por punto fijo; marcar invitación enviada; enlace de WhatsApp con la URL personal; hoja de QR imprimible (A4/carta) y export `nombre,mesa,url` para grabar etiquetas; desactivar un token |
 | Estado | pendiente |
 
 ## M11 · Operación

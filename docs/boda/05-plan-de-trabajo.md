@@ -25,9 +25,9 @@ Semanas relativas al arranque de la fase 1; la fase 8 debe terminar al menos una
 
 - [ ] Crear proyecto Supabase nuevo (Free) y aplicar `supabase/migrations/0001_init.sql` (borrador en `03-arquitectura.md`).
 - [ ] Seed de prueba: 2 mesas, 5 invitados, 8 tokens (guest, table, spot).
-- [ ] Alta de administradores en `admins`; probar magic link.
+- [ ] Alta del único administrador (correo del dueño) en `admins`; registro público desactivado en Supabase Auth; probar que el enlace mágico llega a ese correo y que otro correo no obtiene acceso.
 - [ ] `functions/api/keepalive.ts` + workflow de GitHub Actions cada 3 días.
-- Aceptación: advisors de Supabase sin alertas de RLS; con anon key no se pueden leer `guests`, `tags`, `rsvps` ni filas `pending`; keepalive responde `200`.
+- Aceptación: advisors de Supabase sin alertas de RLS; con anon key no se pueden leer `guests`, `tags`, `rsvps` ni filas `pending`; un correo distinto al del dueño no recibe acceso a `/admin`; keepalive responde `200`.
 
 ## Fase 3 · Subida directa a R2 (semana 2)
 
@@ -40,7 +40,8 @@ Semanas relativas al arranque de la fase 1; la fase 8 debe terminar al menos una
 
 ## Fase 4 · Álbum, moderación y pantalla (semanas 2 y 3)
 
-- [ ] `/admin` con login, cola de pendientes, aprobar/rechazar individual y en bloque, borrado en R2 al rechazar.
+- [ ] `/admin` con login exclusivo del dueño, cola de pendientes, aprobar/rechazar individual y en bloque, borrado en R2 al rechazar.
+- [ ] `/admin/contenido`: todo el contenido de todos los invitados en cualquier estado, con filtros por estado, tipo, invitado y mesa, búsqueda y descarga individual o en ZIP.
 - [ ] Interruptores de modo fiesta en `settings`: `auto_approve_photos`, `defer_videos`.
 - [ ] `/album` con paginación por cursor, lightbox, PIN, filtro "mis fotos", refresco cada 60 s.
 - [ ] `/tv` con Realtime, precarga, rotación de 7 s, mensajes intercalados, funcionamiento sin red.
@@ -48,7 +49,7 @@ Semanas relativas al arranque de la fase 1; la fase 8 debe terminar al menos una
 
 ## Fase 5 · Tokens e invitados (semana 3)
 
-- [ ] `scripts/gen-tokens.ts` (`id8+sig4`), importación CSV de invitados y mesas en `/admin/invitados`.
+- [ ] `/admin/invitados`: alta manual, edición en tabla, importación CSV (nombre, apellido, familia, mesa, boletos, menú, menor), vista por mesa, marca de invitación enviada y enlace de WhatsApp con la URL personal; `scripts/gen-tokens.ts` (`id8+sig4`).
 - [ ] `functions/api/resolve-token.ts`; `/t/:token`; inicio personalizado con "tu mesa"; buscador por nombre de respaldo.
 - [ ] `/admin/etiquetas`: hoja de QR imprimible y export `nombre,mesa,url` para grabar etiquetas; desactivar token.
 - Aceptación: token de invitado saluda por nombre y mesa; token de mesa pide nombre una vez; token inválido no revela nada; QR impreso y etiqueta NFC de prueba abren la misma URL.
@@ -57,14 +58,14 @@ Semanas relativas al arranque de la fase 1; la fase 8 debe terminar al menos una
 
 - [ ] `AudioRecorder` con `MediaRecorder`, límite 90 s, vista previa y reintento; `/mensajes` con texto o audio; modo kiosko.
 - [ ] `functions/api/messages.ts`; mensajes en `/admin` y en `/tv`.
-- [ ] `/canciones` con pedir y votar; `/admin/canciones` para el DJ con CSV.
+- [ ] `/canciones` con pedir y votar; `/dj` de sólo lectura con clave para el DJ; `/admin/canciones` con CSV.
 - Aceptación: audio grabado en Safari iOS y Chrome Android se reproduce en ambos; voto repetido no duplica; el DJ ve el ranking en su celular.
 
 ## Fase 7 · Info, RSVP, regalos y PWA (semanas 4 y 5)
 
 - [ ] `/info` con itinerario, mapas, hoteles, dress code, WiFi con QR; contenido en JSON editable.
 - [ ] `/regalos` con mesa de regalos y CLABE/Mercado Pago con botón copiar.
-- [ ] `/rsvp` por token y por nombre; `/admin/rsvp` con conteo y exportación.
+- [ ] `/rsvp` por token y por nombre (acompañantes limitados a los boletos del invitado); `/admin/confirmaciones` con tablero (confirmados, no asisten, pendientes, acompañantes, total de personas, alergias), filtros por mesa y familia, recordatorio por WhatsApp a pendientes y exportación CSV.
 - [ ] PWA: manifest, íconos, service worker con caché de la app (nunca de la API); aviso de privacidad en el primer uso.
 - [ ] Open Graph y vista previa verificada en WhatsApp.
 - Aceptación: todas las pantallas del MVP funcionan sin cuenta en ambos sistemas; "Agregar a inicio" abre como app; enlace compartido por WhatsApp muestra título, imagen y descripción.

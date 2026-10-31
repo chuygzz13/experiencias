@@ -13,7 +13,7 @@ Resumen visual: `08-propuesta.html` (también publicada en https://claude.ai/art
 | Archivos | Cloudflare R2 | Free: 10 GB-mes, 1 M escrituras, 10 M lecturas, salida gratis; excedente 0.015 USD/GB-mes | Fotos, videos, audios; servido por CDN con dominio propio |
 | Datos | Supabase Postgres | Free: 500 MB, pausa tras 7 días sin uso | Sólo metadatos y configuración |
 | Tiempo real | Supabase Realtime | Free: 200 conexiones simultáneas, 2 M mensajes/mes | Pantalla `/tv` y panel `/admin` |
-| Acceso admin | Supabase Auth (magic link) | Free | Login de 1 a 2 moderadores |
+| Acceso admin | Supabase Auth (magic link, registro público desactivado) | Free | Login exclusivo del dueño (`ADMIN_EMAIL`) |
 | Anti-pausa | GitHub Actions `schedule` o Worker con Cron Trigger | Free | `GET /api/keepalive` cada 3 días |
 | Dominio | Registrador + DNS en Cloudflare | 300 a 500 MXN/año | `boda.<dominio>` y `media.<dominio>` |
 
@@ -65,6 +65,19 @@ sólo al abrir el visor. Refresco al volver a la pestaña o cada 60 s. Acceso co
 
 Escrituras vía funciones (`/api/messages`, `/api/songs`, `/api/songs/vote`, `/api/rsvp`), siempre con token. Lecturas con
 anon key: `messages` aprobados, `song_rank` (vista con conteo de votos), nunca `guests` ni `rsvps`.
+
+### 2.6 Panel de administración (sólo el dueño)
+
+1. `/admin` pide sesión de Supabase Auth. El enlace mágico sólo se envía al correo de la lista blanca (`ADMIN_EMAIL`); el
+   registro público está desactivado en Auth y `admins` contiene una sola fila.
+2. Con sesión válida, el frontend usa el cliente de Supabase con el JWT del dueño; RLS (`is_admin()`) abre `guests`, `tags`,
+   `rsvps`, `settings` y todas las filas de `media`, `messages` y `songs` en cualquier estado.
+3. Secciones: cola de moderación; contenido completo con filtros (estado, tipo, invitado, mesa), búsqueda y descarga;
+   invitados (alta manual, CSV, mesas, boletos, menú, menores, token y QR, invitación enviada, enlace de WhatsApp con la URL
+   personal); confirmaciones (tablero y lista, recordatorios, CSV); etiquetas; canciones; estado del sistema.
+4. Borrar objetos en R2 (al rechazar o eliminar) pasa por `POST /api/admin/purge`, que verifica el JWT y `is_admin()` antes
+   de usar las credenciales S3.
+5. El DJ usa `/dj`: página de sólo lectura protegida con `settings.clave_dj`, que muestra `song_rank` y nada más.
 
 ## 3. Diseño anti-colapso
 
@@ -132,6 +145,7 @@ create extension if not exists pgcrypto;
 create type media_kind    as enum ('photo', 'video', 'audio');
 create type review_status as enum ('pending', 'approved', 'rejected');
 create type tag_kind      as enum ('guest', 'table', 'spot');
+create type rsvp_status   as enum ('pendiente', 'confirmado', 'no_asiste');
 
 create table tables (
   id        smallserial primary key,
@@ -141,15 +155,18 @@ create table tables (
 );
 
 create table guests (
-  id         uuid primary key default gen_random_uuid(),
-  nombre     text not null,
-  apellido   text,
-  familia    text,
-  table_id   smallint references tables(id),
-  menu       text,
-  es_menor   boolean not null default false,
-  notas      text,
-  created_at timestamptz not null default now()
+  id                    uuid primary key default gen_random_uuid(),
+  nombre                text not null,
+  apellido              text,
+  familia               text,
+  table_id              smallint references tables(id),
+  max_acompanantes      smallint not null default 0,   -- "boletos" además del propio invitado
+  menu                  text,
+  es_menor              boolean not null default false,
+  telefono              text,                          -- opcional, sólo admin; para el enlace de WhatsApp
+  invitacion_enviada_at timestamptz,
+  notas                 text,
+  created_at            timestamptz not null default now()
 );
 
 create table tags (
@@ -163,12 +180,13 @@ create table tags (
 );
 
 create table rsvps (
-  guest_id     uuid primary key references guests(id) on delete cascade,
-  asiste       boolean,
-  acompanantes smallint not null default 0,
-  alergias     text,
-  cancion      text,
-  updated_at   timestamptz not null default now()
+  guest_id      uuid primary key references guests(id) on delete cascade,
+  status        rsvp_status not null default 'pendiente',
+  acompanantes  smallint not null default 0,
+  alergias      text,
+  cancion       text,
+  respondido_at timestamptz,
+  updated_at    timestamptz not null default now()
 );
 
 create table media (
@@ -227,6 +245,8 @@ create table settings (
 -- claves previstas: fecha_evento, wifi {ssid, password}, pin_galeria_hash, auto_approve_photos,
 -- defer_videos, textos {bienvenida, agradecimiento}, limites {files_per_10min, video_max_s, video_max_mb}
 
+-- Una sola fila: el dueño del proyecto (ADMIN_EMAIL). Registro público desactivado en Supabase Auth.
+-- Si algún día se delega moderación, se añade la columna rol ('owner' | 'moderador') y políticas aparte.
 create table admins (
   user_id uuid primary key references auth.users(id) on delete cascade,
   nombre  text
@@ -252,6 +272,15 @@ create view song_rank with (security_invoker = true) as
   from songs s left join song_votes v on v.song_id = s.id
   where s.status = 'approved'
   group by s.id;
+
+-- Tablero de confirmaciones (sólo legible por el admin vía RLS de guests y rsvps).
+create view rsvp_resumen with (security_invoker = true) as
+  select coalesce(r.status, 'pendiente'::rsvp_status)   as status,
+         count(*)                                       as invitados,
+         coalesce(sum(r.acompanantes), 0)               as acompanantes,
+         count(*) + coalesce(sum(r.acompanantes), 0)    as personas
+  from guests g left join rsvps r on r.guest_id = g.id
+  group by 1;
 
 -- RLS ----------------------------------------------------------------------
 alter table tables     enable row level security;
@@ -303,8 +332,9 @@ viaja en el cuerpo, nunca en la URL de la función (la URL `/t/<token>` es sólo
 | `POST /api/messages` | `{token, texto?, media_id?}` | `{id}` | Texto ≤ 500 caracteres; `media_id` debe ser audio del mismo guest |
 | `POST /api/songs` | `{token, titulo, artista?}` | `{id, existed:boolean}` | Deduplica por título+artista normalizados; vota automáticamente |
 | `POST /api/songs/vote` | `{token, song_id}` | `{votos}` | Idempotente (PK compuesta) |
-| `POST /api/rsvp` | `{token, asiste, acompanantes, alergias?, cancion?}` | `{ok}` | Sólo tokens de tipo `guest` |
+| `POST /api/rsvp` | `{token, status, acompanantes, alergias?, cancion?}` | `{ok}` | Sólo tokens de tipo `guest`; `acompanantes ≤ guests.max_acompanantes`; fija `respondido_at` |
 | `GET /api/keepalive` | — | `{ok, at}` | `select 1`; llamado por el cron cada 3 días |
+| `POST /api/admin/purge` | `{ids:[uuid]}` + cabecera `Authorization: Bearer <JWT del dueño>` | `{deleted:[uuid]}` | Verifica el JWT con Supabase y `is_admin()`; borra `web/`, `thumb/`, `video/`, `audio/` en R2 |
 
 Modo degradado de `upload-url`: si Supabase falla, la función igual firma (el token ya está verificado por HMAC) y escribe
 `meta/<uuid>.json` en R2 con los metadatos; `scripts/reconcile.ts` lista `meta/` y crea las filas faltantes.
@@ -318,7 +348,7 @@ Modo degradado de `upload-url`: si Supabase falla, la función igual firma (el t
 | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | funciones | Escrituras con service role |
 | `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` | funciones | Presign S3 |
 | `TOKEN_HMAC_SECRET` | funciones y script de generación de tokens | Firma `sig4` |
-| `ADMIN_EMAILS` | funciones / seed | Alta de administradores |
+| `ADMIN_EMAIL` | seed / hook de Auth | Único correo con acceso a `/admin` (el dueño) |
 
 Se versiona `.env.example` con los nombres; los valores viven en Cloudflare (Pages → Settings → Variables) y en local en
 `.env` ignorado por git.

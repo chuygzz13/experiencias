@@ -61,7 +61,8 @@ muestra en segundos, que es donde importa.
 ## D07 · Moderación humana con modo fiesta
 
 **Contexto.** Hay menores, hay invitados que no quieren salir en línea y puede subirse contenido inapropiado.
-**Decisión.** Todo entra como `pending`. Una persona de confianza (no los novios) aprueba desde `/admin`. Interruptor
+**Decisión.** Todo entra como `pending`. El dueño aprueba desde `/admin` (ver D11); si esa noche quiere delegar, otorga un
+acceso temporal de moderador limitado a aprobar y rechazar. Interruptor
 "aprobar fotos automáticamente esta noche" para que la pantalla no se vacíe; videos y mensajes siguen pasando por revisión.
 Botón "reportar" en cada elemento que lo oculta al instante.
 **Consecuencias.** `/admin` debe ser de un toque por elemento, con acciones en bloque y utilizable desde un celular.
@@ -90,6 +91,20 @@ para el presign sin otro proveedor.
 **Consecuencias.** DNS del dominio en Cloudflare. Si en el futuro se prefiere Vercel, las funciones se portan a serverless
 sin cambiar R2 ni Supabase.
 
+## D11 · Un solo administrador: el dueño del proyecto
+
+**Contexto.** El dueño pidió que sólo él pueda entrar como administrador para ver el contenido de todos los invitados, cargar
+la lista de invitados y seguir las confirmaciones.
+**Decisión.** `/admin` es exclusivo del dueño: Supabase Auth con registro público desactivado y lista blanca de un solo
+correo (`ADMIN_EMAIL`); la tabla `admins` tiene una fila; todas las políticas de administración dependen de `is_admin()`.
+El panel incluye: cola de moderación, vista de todo el contenido en cualquier estado, lista de invitados (alta manual e
+importación CSV, mesas, boletos, menú, menores, token y QR, invitación enviada, enlace de WhatsApp), tablero de
+confirmaciones (confirmados, no asisten, pendientes, acompañantes, alergias, recordatorios, exportación) y estado del sistema.
+**Consecuencias.** El DJ no entra a `/admin`: recibe `/dj`, una página de sólo lectura con clave y sin datos de invitados.
+La pantalla `/tv` abre con su propia clave. Si el dueño quiere delegar la moderación la noche de la boda, se habilita un rol
+`moderador` temporal (sólo aprobar y rechazar, sin invitados ni confirmaciones) que se revoca al día siguiente; por defecto
+no existe nadie más.
+
 ---
 
 ## Pendientes del dueño del proyecto
@@ -99,6 +114,6 @@ sin cambiar R2 ni Supabase.
 | Fecha de la boda y nombre del salón | Calendario de fases, medición de red en sitio | Fase 8 (pruebas de campo) |
 | Dominio deseado (o aprobar una propuesta) | URL corta de las etiquetas, dominio de medios | Fase 1 (despliegue) |
 | R2 (con tarjeta registrada) o Backblaze B2 | Crear el bucket | Fase 3 (subida) |
-| Nombres y correos de 1 a 2 administradores | Auth de `/admin` | Fase 4 |
+| Correo del administrador (sólo el dueño) | Lista blanca de Auth y fila única en `admins` | Fase 2 |
 | Lista de invitados y mesas (puede venir de Obsidian) | Tokens, QR, grabación de etiquetas | Fase 5 |
 | Paleta y tipografía definitivas (ver `07-diseno-y-tipografia.md` y la bóveda de Obsidian) | Tokens de diseño | Fase 1 (diseño base) |

@@ -30,7 +30,8 @@ la skill `/boda-obsidian` a partir de las notas del dueño sobre diseño web y t
 ├─ /regalos  Mesa de regalos · sobre digital
 ├─ /t/:token Entrada (redirige a /)
 ├─ /tv       Muro en vivo (pantalla)
-└─ /admin    Login → cola · invitados · etiquetas · canciones · rsvp · estado
+├─ /dj       Ranking de canciones para el DJ (clave, sólo lectura)
+└─ /admin    Login (sólo tú) → cola · contenido · invitados · confirmaciones · etiquetas · canciones · estado
 ```
 
 Navegación de invitado: barra inferior fija con 4 destinos (Inicio, Subir, Álbum, Más). "Más" abre mensajes, canciones,
