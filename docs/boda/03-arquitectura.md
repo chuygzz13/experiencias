@@ -17,8 +17,9 @@ Resumen visual: `08-propuesta.html` (también publicada en https://claude.ai/art
 | Anti-pausa | GitHub Actions `schedule` o Worker con Cron Trigger | Free | `GET /api/keepalive` cada 3 días |
 | Dominio | Registrador + DNS en Cloudflare | 300 a 500 MXN/año | `boda.<dominio>` y `media.<dominio>` |
 
-Alternativas equivalentes: Backblaze B2 en lugar de R2 (mismo protocolo S3, 10 GB gratis); Vercel Hobby en lugar de Pages
-(las funciones se portan a serverless).
+Decidido (D12): Cloudflare R2 para los archivos. Backblaze B2 queda como destino del respaldo final posterior a la boda
+(almacenamiento más barato) y como alternativa sólo si R2 no pudiera activarse. Vercel Hobby en lugar de Pages seguiría
+siendo posible (las funciones se portan a serverless).
 
 ## 2. Flujos principales
 

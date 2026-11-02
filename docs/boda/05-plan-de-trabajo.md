@@ -31,7 +31,8 @@ información y RSVP) esté listo antes de enviar las invitaciones, y las pruebas
 - [ ] Leer la bóveda de Obsidian con `/boda-obsidian` y actualizar 06 y 07.
 - [x] Fecha y salón definidos: 13 de febrero de 2027, Terraza en las Nubes, Santiago, N.L.
 - [ ] Elegir y registrar el dominio (`10-dominio.md`, verificar con `node scripts/check-domains.mjs`).
-- [ ] Decidir R2 o B2; confirmar el correo del administrador.
+- [x] Almacenamiento de archivos: Cloudflare R2 (D12).
+- [ ] Confirmar el correo del administrador.
 
 ## Fase 1 · Migración a Vite y despliegue vacío (semana 1)
 
@@ -110,6 +111,6 @@ información y RSVP) esté listo antes de enviar las invitaciones, y las pruebas
 
 ## Después de la boda
 
-- [ ] `scripts/reconcile.ts` y `scripts/export-all.ts` (respaldo completo a disco).
+- [ ] `scripts/reconcile.ts` y `scripts/export-all.ts` (respaldo completo a disco y copia a Backblaze B2 como archivo frío).
 - [ ] Fotos oficiales del fotógrafo al álbum; agradecimientos por token.
 - [ ] Decidir cuánto vive la página (1 a 2 años); exportar y apagar al final; borrar datos personales.

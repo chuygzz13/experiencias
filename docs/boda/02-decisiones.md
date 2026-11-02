@@ -115,6 +115,17 @@ La pantalla `/tv` abre con su propia clave. Si el dueño quiere delegar la moder
 `moderador` temporal (sólo aprobar y rechazar, sin invitados ni confirmaciones) que se revoca al día siguiente; por defecto
 no existe nadie más.
 
+## D12 · Archivos en Cloudflare R2
+
+**Contexto.** Había que elegir entre Cloudflare R2 y Backblaze B2 para fotos, videos y audios. Ambos ofrecen 10 GB gratis
+y protocolo S3; la diferencia de costo a 25 GB es de unos 2 MXN al mes.
+**Decisión.** Cloudflare R2, decidido por el dueño el 2 de noviembre de 2026. Razones: misma cuenta que Pages, funciones y
+DNS; salida de datos gratis sin configuración adicional; dominio propio `media.<dominio>` con CDN y caché en un clic; CORS
+desde el panel; menos piezas que puedan fallar la noche de la boda.
+**Consecuencias.** Hay que registrar una tarjeta en Cloudflare para activar R2 (verificación; sin cobro dentro de los 10 GB
+gratuitos; ≈ 4 MXN al mes si se llega a 25 GB). Backblaze B2 queda como destino del respaldo final posterior a la boda y
+como alternativa sólo si R2 no pudiera activarse.
+
 ---
 
 ## Pendientes del dueño del proyecto
@@ -123,7 +134,7 @@ no existe nadie más.
 |---|---|---|
 | Fecha y salón: **resuelto** (13 feb 2027, Terraza en las Nubes, Santiago N.L.). Falta dirección exacta, hora y medición de red en sitio | Calendario en `05-plan-de-trabajo.md`; página `/info`; límite de video | Fase 7 (`/info`), fase 8 (ensayo en el salón) |
 | Dominio: elegir entre los candidatos de `10-dominio.md`, verificar con `scripts/check-domains.mjs` y registrarlo | URL corta de las etiquetas, dominio de medios | Fase 1 (despliegue) |
-| R2 (con tarjeta registrada) o Backblaze B2 | Crear el bucket | Fase 3 (subida) |
+| Activar R2 en la cuenta de Cloudflare (pide tarjeta como verificación) y crear el bucket | Subida de archivos | Fase 3 (subida) |
 | Correo del administrador (sólo el dueño) | Lista blanca de Auth y fila única en `admins` | Fase 2 |
 | Lista de invitados y mesas (puede venir de Obsidian) | Tokens, QR, grabación de etiquetas | Fase 5 |
 | Paleta y tipografía definitivas (ver `07-diseno-y-tipografia.md` y la bóveda de Obsidian) | Tokens de diseño | Fase 1 (diseño base) |
