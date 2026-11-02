@@ -37,6 +37,14 @@ dominio extra que redirige al principal.
 
 Descartados por criterio: cualquier variante con guiones (`monica-y-jesus.com`), con acentos (IDN) o con "and".
 
+**`Monica&Jesus` no es posible como dominio** (consultado el 2 de noviembre de 2026). Los nombres de dominio sólo admiten
+letras, dígitos y guiones (regla "LDH" de los RFC 1035/1123); los símbolos como `&`, `+`, `_` o espacios están prohibidos,
+también en los dominios internacionalizados (IDNA2008 sólo añade letras de otros alfabetos, no símbolos). Las mayúsculas no
+cuentan: `MonicaYJesus.com` y `monicayjesus.com` son el mismo dominio y se puede escribir con mayúsculas en invitaciones y
+letreros. Los dominios con emoji (por ejemplo un corazón) sólo existen en extensiones como `.ws`, `.to` o `.fm`, no en
+`.com` ni `.mx`, y se muestran mal en muchos navegadores y en WhatsApp, así que se descartan. Cómo conservar la idea:
+`monicayjesus.com` como dominio, y "Mónica & Jesús" en el logotipo, las invitaciones y el hashtag.
+
 ## 3. Cómo verificar disponibilidad
 
 Desde la computadora (no funciona desde el contenedor de Claude en la nube):
