@@ -6,6 +6,8 @@ Repositorio `chuygzz13/experiencias`. Se va a convertir en la página web de una
 entrada por etiqueta NFC o QR, álbum colaborativo de fotos y videos, muro en vivo en la pantalla del salón,
 libro de visitas con texto y audio, petición de canciones, RSVP, logística y mesa de regalos.
 Restricción central: **costo mensual cero** (sólo dominio y etiquetas NFC).
+Datos del evento: sábado 13 de febrero de 2027, Salón Terraza en las Nubes, Santiago, Nuevo León (zona serrana: medir la
+señal en sitio). Dominio pendiente; candidatos y script de verificación en `docs/boda/10-dominio.md`.
 
 ## Estado actual
 
@@ -79,6 +81,7 @@ docs/boda/                 .claude/skills/
 5. `docs/boda/06-seguridad-y-privacidad.md` y `docs/boda/07-diseno-y-tipografia.md` — guías transversales.
 6. `docs/boda/01-investigacion-base.md` — la investigación original con fuentes (NFC, redes sociales, costos).
 7. `docs/boda/08-propuesta.html` — la propuesta visual presentada al dueño del proyecto.
+8. `docs/boda/10-dominio.md` — criterios, candidatos y cómo verificar el dominio (`scripts/check-domains.mjs`).
 
 La skill `/boda-contexto` resume este orden y las reglas duras.
 

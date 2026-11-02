@@ -4,6 +4,16 @@ Formato breve tipo ADR: contexto, decisión, consecuencias. Las decisiones se to
 `01-investigacion-base.md` y de las respuestas del dueño del proyecto. Para cambiar una, se añade una nueva entrada que la
 reemplace; no se edita la original.
 
+## Datos del evento
+
+| Dato | Valor | Fuente |
+|---|---|---|
+| Fecha | Sábado 13 de febrero de 2027 (hora por confirmar) | Dueño, 2 nov 2026 |
+| Lugar | Salón Terraza en las Nubes, Santiago, Nuevo León | Dueño, 2 nov 2026. Dirección y enlace de mapa por confirmar; una nota de prensa ubica un salón "Las Nubes" en Carretera Nacional km 254, col. Los Rodríguez, Santiago, N.L. (verificar que sea el mismo) |
+| Invitados | ~200 | Dueño |
+| Dominio | Pendiente; candidatos en `10-dominio.md` | — |
+| Nota de red | Santiago es zona serrana sobre la Carretera Nacional: la cobertura celular puede ser irregular. Medición en sitio obligatoria (fase 8) | Investigación |
+
 ---
 
 ## D01 · Alcance de la primera versión: MVP recomendado
@@ -111,8 +121,8 @@ no existe nadie más.
 
 | Pendiente | Para qué se necesita | Bloquea |
 |---|---|---|
-| Fecha de la boda y nombre del salón | Calendario de fases, medición de red en sitio | Fase 8 (pruebas de campo) |
-| Dominio deseado (o aprobar una propuesta) | URL corta de las etiquetas, dominio de medios | Fase 1 (despliegue) |
+| Fecha y salón: **resuelto** (13 feb 2027, Terraza en las Nubes, Santiago N.L.). Falta dirección exacta, hora y medición de red en sitio | Calendario en `05-plan-de-trabajo.md`; página `/info`; límite de video | Fase 7 (`/info`), fase 8 (ensayo en el salón) |
+| Dominio: elegir entre los candidatos de `10-dominio.md`, verificar con `scripts/check-domains.mjs` y registrarlo | URL corta de las etiquetas, dominio de medios | Fase 1 (despliegue) |
 | R2 (con tarjeta registrada) o Backblaze B2 | Crear el bucket | Fase 3 (subida) |
 | Correo del administrador (sólo el dueño) | Lista blanca de Auth y fila única en `admins` | Fase 2 |
 | Lista de invitados y mesas (puede venir de Obsidian) | Tokens, QR, grabación de etiquetas | Fase 5 |

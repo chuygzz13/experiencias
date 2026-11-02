@@ -3,13 +3,35 @@
 Backlog por fases. Cada tarea tiene un criterio de aceptación que se verifica en un celular real antes de marcarla.
 Semanas relativas al arranque de la fase 1; la fase 8 debe terminar al menos una semana antes de la boda.
 
+## Calendario (boda: sábado 13 de febrero de 2027)
+
+Quedan 14 semanas desde el 2 de noviembre de 2026. Las fases se reordenan para que lo necesario para invitar (tokens,
+información y RSVP) esté listo antes de enviar las invitaciones, y las pruebas de campo terminen una semana antes.
+
+| Semana | Fechas | Qué se hace | Hito |
+|---|---|---|---|
+| 0 | 2 a 8 nov | Cerrar fase 0: dominio, R2 o B2, correo del administrador, leer la bóveda de Obsidian | Decisiones cerradas |
+| 1 | 9 a 15 nov | Fase 1 (Vite y despliegue) y fase 2 (Supabase) | URL en Cloudflare Pages funcionando |
+| 2 | 16 a 22 nov | Fase 3 (subida directa a R2) | Fotos y videos suben desde celular |
+| 3 | 23 a 29 nov | Fase 5 (tokens e invitados) | Lista de invitados cargada; QR por invitado |
+| 4 | 30 nov a 6 dic | Fase 7 parcial: `/info`, `/rsvp`, `/regalos`, Open Graph | Lo necesario para invitar |
+| 5 | 7 a 13 dic | **Envío de invitaciones por WhatsApp** (9 semanas antes); fase 4 (álbum, moderación, `/tv`) | Invitaciones fuera |
+| 6 | 14 a 20 dic | Fase 4 continúa | Muro en vivo funcionando |
+| 7 a 9 | 21 dic a 10 ene | Fase 6 (mensajes y canciones), PWA, aviso de privacidad; ritmo navideño | MVP completo |
+| 10 y 11 | 11 a 24 ene | Fase 8: prueba de carga (semana del 18 ene), compra y grabación de etiquetas, impresión. **Cierre de RSVP: 23 de enero** | Etiquetas listas; conteo final |
+| 12 | 25 a 31 ene | Ensayo en el salón (propuesto: sábado 30 de enero) y ajustes | Red medida; límite de video fijado |
+| 13 | 1 a 6 feb | Congelar cambios, respaldo, checklist del día, documento para el moderador | Listo |
+| 14 | 7 a 13 feb | Sin cambios de código. Sábado 13: boda | — |
+
 ## Fase 0 · Base documental (esta entrega)
 
 - [x] Investigación con fuentes (`01-investigacion-base.md`).
 - [x] Propuesta visual (`08-propuesta.html`).
 - [x] Decisiones, arquitectura, mapa de módulos, plan, seguridad, diseño, skills, `CLAUDE.md`.
 - [ ] Leer la bóveda de Obsidian con `/boda-obsidian` y actualizar 06 y 07.
-- [ ] Resolver pendientes del dueño (ver `02-decisiones.md`): fecha y salón, dominio, R2 o B2, administradores.
+- [x] Fecha y salón definidos: 13 de febrero de 2027, Terraza en las Nubes, Santiago, N.L.
+- [ ] Elegir y registrar el dominio (`10-dominio.md`, verificar con `node scripts/check-domains.mjs`).
+- [ ] Decidir R2 o B2; confirmar el correo del administrador.
 
 ## Fase 1 · Migración a Vite y despliegue vacío (semana 1)
 

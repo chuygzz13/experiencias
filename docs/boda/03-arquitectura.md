@@ -95,6 +95,10 @@ anon key: `messages` aprobados, `song_rank` (vista con conteo de votos), nunca `
 Conclusión: el backend no es el riesgo; el enlace de subida del salón sí. Por eso las fotos tienen prioridad y los videos
 pueden diferirse desde `/admin`.
 
+El salón (Terraza en las Nubes, Santiago, N.L.) está en zona serrana sobre la Carretera Nacional, donde la cobertura
+celular suele ser irregular. La medición en sitio del WiFi y de la señal (fase 8, ensayo del 30 de enero) decide el límite
+de video y si hace falta un hotspot o enlace propio para la pantalla.
+
 ### 3.2 Decisiones que lo sostienen
 
 - Archivos siempre directo navegador → R2. Funciones y Postgres sólo ven texto corto; registro por lote (una llamada por
@@ -242,8 +246,9 @@ create table settings (
   value      jsonb not null,
   updated_at timestamptz not null default now()
 );
--- claves previstas: fecha_evento, wifi {ssid, password}, pin_galeria_hash, auto_approve_photos,
--- defer_videos, textos {bienvenida, agradecimiento}, limites {files_per_10min, video_max_s, video_max_mb}
+-- claves previstas: fecha_evento (2027-02-13, hora por confirmar), lugar {nombre, direccion, maps_url},
+-- wifi {ssid, password}, pin_galeria_hash, clave_tv, clave_dj, auto_approve_photos, defer_videos,
+-- textos {bienvenida, agradecimiento}, limites {files_per_10min, video_max_s, video_max_mb}, retencion_hasta
 
 -- Una sola fila: el dueño del proyecto (ADMIN_EMAIL). Registro público desactivado en Supabase Auth.
 -- Si algún día se delega moderación, se añade la columna rol ('owner' | 'moderador') y políticas aparte.
