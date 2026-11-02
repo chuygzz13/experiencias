@@ -15,6 +15,22 @@ comprar. La decisión final se registra en `02-decisiones.md` como D12.
 
 ## 2. Candidatos
 
+### Propuesto por el dueño (2 de noviembre de 2026): `monichuy.mx`
+
+"Moni" + "Chuy" (apodo de Jesús). Evaluación contra los criterios: 8 letras, sin guiones ni acentos, se dicta solo y suena a
+pareja; funciona si los invitados los conocen como Moni y Chuy, que en familia y amigos es lo normal. Riesgo bajo de
+confusión al escribir ("monichuy" se escribe como suena). Si está libre, es un gran dominio principal; conviene tomar
+también `monichuy.com` para que la versión escrita en `.com` no se la lleve nadie. Verificar con:
+
+```bash
+node scripts/check-domains.mjs monichuy.mx monichuy.com monichuy.boda
+```
+
+Sin rastro público del nombre en buscadores al 2 de noviembre de 2026, lo que sugiere que no hay una página activa con
+él; no demuestra que esté libre.
+
+### Lista general
+
 Orden de preferencia dentro de cada grupo. "Uso" indica si conviene como dominio principal (el que se dicta) o como
 dominio extra que redirige al principal.
 

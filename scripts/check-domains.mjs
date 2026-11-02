@@ -5,6 +5,9 @@
 // Requiere Node 18 o superior (fetch global). Correr desde tu computadora; en el contenedor de Claude la red está cerrada.
 
 const CANDIDATOS = [
+  'monichuy.mx',
+  'monichuy.com',
+  'monichuy.boda',
   'monicayjesus.com',
   'monicayjesus.mx',
   'monicayjesus.boda',
