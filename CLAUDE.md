@@ -7,7 +7,7 @@ entrada por etiqueta NFC o QR, álbum colaborativo de fotos y videos, muro en vi
 libro de visitas con texto y audio, petición de canciones, RSVP, logística y mesa de regalos.
 Restricción central: **costo mensual cero** (sólo dominio y etiquetas NFC).
 Datos del evento: sábado 13 de febrero de 2027, Salón Terraza en las Nubes, Santiago, Nuevo León (zona serrana: medir la
-señal en sitio). Dominio pendiente; candidatos y script de verificación en `docs/boda/10-dominio.md`.
+señal en sitio). Dominio: `monichuy.mx` (D13; registro pendiente), imágenes en `media.monichuy.mx`.
 
 ## Estado actual
 
@@ -41,7 +41,7 @@ Fase 0: base documental. Todavía no hay código de la boda. `src/` es un protot
 |---|---|---|
 | Frontend | React 19 + Vite, React Router, PWA (`vite-plugin-pwa`) | — |
 | Hosting y funciones | Cloudflare Pages + Pages Functions (TypeScript) | Free |
-| Archivos | Cloudflare R2, dominio público `media.<dominio>` | Free hasta 10 GB |
+| Archivos | Cloudflare R2, dominio público `media.monichuy.mx` | Free hasta 10 GB |
 | Datos, tiempo real, auth del dueño | Supabase (Postgres, Realtime, Auth magic link sin registro público) | Free |
 | Anti-pausa de Supabase | GitHub Actions programado o Worker con cron, cada 3 días | Free |
 

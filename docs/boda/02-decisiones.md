@@ -11,7 +11,7 @@ reemplace; no se edita la original.
 | Fecha | Sábado 13 de febrero de 2027 (hora por confirmar) | Dueño, 2 nov 2026 |
 | Lugar | Salón Terraza en las Nubes, Santiago, Nuevo León | Dueño, 2 nov 2026. Dirección y enlace de mapa por confirmar; una nota de prensa ubica un salón "Las Nubes" en Carretera Nacional km 254, col. Los Rodríguez, Santiago, N.L. (verificar que sea el mismo) |
 | Invitados | ~200 | Dueño |
-| Dominio | Pendiente; candidatos en `10-dominio.md` | — |
+| Dominio | `monichuy.mx` (D13); registro pendiente. `monichuy.com` como respaldo de la versión escrita si sigue libre | Dueño, 3 nov 2026 |
 | Nota de red | Santiago es zona serrana sobre la Carretera Nacional: la cobertura celular puede ser irregular. Medición en sitio obligatoria (fase 8) | Investigación |
 
 ---
@@ -120,11 +120,24 @@ no existe nadie más.
 **Contexto.** Había que elegir entre Cloudflare R2 y Backblaze B2 para fotos, videos y audios. Ambos ofrecen 10 GB gratis
 y protocolo S3; la diferencia de costo a 25 GB es de unos 2 MXN al mes.
 **Decisión.** Cloudflare R2, decidido por el dueño el 2 de noviembre de 2026. Razones: misma cuenta que Pages, funciones y
-DNS; salida de datos gratis sin configuración adicional; dominio propio `media.<dominio>` con CDN y caché en un clic; CORS
+DNS; salida de datos gratis sin configuración adicional; dominio propio `media.monichuy.mx` con CDN y caché en un clic; CORS
 desde el panel; menos piezas que puedan fallar la noche de la boda.
 **Consecuencias.** Hay que registrar una tarjeta en Cloudflare para activar R2 (verificación; sin cobro dentro de los 10 GB
 gratuitos; ≈ 4 MXN al mes si se llega a 25 GB). Backblaze B2 queda como destino del respaldo final posterior a la boda y
 como alternativa sólo si R2 no pudiera activarse.
+
+## D13 · Dominio: `monichuy.mx`
+
+**Contexto.** Se evaluaron 14 candidatos en `10-dominio.md`. El dueño propuso `monichuy.mx` ("Moni" + "Chuy") y verificó
+el 3 de noviembre de 2026 que está libre. Cumple los criterios: 8 letras, sin guiones ni acentos, se escribe como suena y
+suena a pareja.
+**Decisión.** `monichuy.mx` es el dominio principal: la página en `https://monichuy.mx`, las etiquetas NFC/QR en
+`https://monichuy.mx/t/<token>` y las imágenes en `https://media.monichuy.mx`. Se registra por dos años con renovación
+automática y privacidad WHOIS; el DNS vive en Cloudflare. Si `monichuy.com` sigue libre, se registra también y redirige
+con 301 al `.mx`. Hashtag: `#MoniChuy2027`.
+**Consecuencias.** Se sustituye `<dominio>` por `monichuy.mx` en arquitectura, plan, seguridad y `CLAUDE.md`. El registro
+real queda en pendientes hasta que el dueño lo complete (Akky o Porkbun). Las etiquetas NFC no se graban hasta que el
+dominio resuelva en Cloudflare.
 
 ---
 
@@ -133,7 +146,7 @@ como alternativa sólo si R2 no pudiera activarse.
 | Pendiente | Para qué se necesita | Bloquea |
 |---|---|---|
 | Fecha y salón: **resuelto** (13 feb 2027, Terraza en las Nubes, Santiago N.L.). Falta dirección exacta, hora y medición de red en sitio | Calendario en `05-plan-de-trabajo.md`; página `/info`; límite de video | Fase 7 (`/info`), fase 8 (ensayo en el salón) |
-| Dominio: elegir entre los candidatos de `10-dominio.md`, verificar con `scripts/check-domains.mjs` y registrarlo | URL corta de las etiquetas, dominio de medios | Fase 1 (despliegue) |
+| Registrar `monichuy.mx` (y `monichuy.com` si sigue libre) en Akky o Porkbun y poner el DNS en Cloudflare | URL de las etiquetas, dominio de medios | Fase 1 (despliegue) |
 | Activar R2 en la cuenta de Cloudflare (pide tarjeta como verificación) y crear el bucket | Subida de archivos | Fase 3 (subida) |
 | Correo del administrador (sólo el dueño) | Lista blanca de Auth y fila única en `admins` | Fase 2 |
 | Lista de invitados y mesas (puede venir de Obsidian) | Tokens, QR, grabación de etiquetas | Fase 5 |

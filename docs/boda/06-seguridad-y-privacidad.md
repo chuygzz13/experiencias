@@ -50,7 +50,7 @@ las políticas de la base, no en el navegador.
 
 ## 5. Archivos (R2)
 
-- Bucket privado; acceso público sólo a través del dominio `media.<dominio>` para las claves `web/`, `thumb/`, `video/`,
+- Bucket privado; acceso público sólo a través del dominio `media.monichuy.mx` para las claves `web/`, `thumb/`, `video/`,
   `audio/`. Las claves llevan UUID v4: no se pueden enumerar ni adivinar. El prefijo `meta/` no se expone.
 - Al rechazar, se borra el objeto, no sólo la fila.
 - `Cache-Control: public, max-age=31536000, immutable` para `thumb/` y `web/`; los rechazados se borran, así que la caché no

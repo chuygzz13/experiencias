@@ -10,7 +10,7 @@ información y RSVP) esté listo antes de enviar las invitaciones, y las pruebas
 
 | Semana | Fechas | Qué se hace | Hito |
 |---|---|---|---|
-| 0 | 2 a 8 nov | Cerrar fase 0: dominio, R2 o B2, correo del administrador, leer la bóveda de Obsidian | Decisiones cerradas |
+| 0 | 2 a 8 nov | Cerrar fase 0: registrar `monichuy.mx`, correo del administrador, leer la bóveda de Obsidian | Decisiones cerradas |
 | 1 | 9 a 15 nov | Fase 1 (Vite y despliegue) y fase 2 (Supabase) | URL en Cloudflare Pages funcionando |
 | 2 | 16 a 22 nov | Fase 3 (subida directa a R2) | Fotos y videos suben desde celular |
 | 3 | 23 a 29 nov | Fase 5 (tokens e invitados) | Lista de invitados cargada; QR por invitado |
@@ -30,7 +30,8 @@ información y RSVP) esté listo antes de enviar las invitaciones, y las pruebas
 - [x] Decisiones, arquitectura, mapa de módulos, plan, seguridad, diseño, skills, `CLAUDE.md`.
 - [ ] Leer la bóveda de Obsidian con `/boda-obsidian` y actualizar 06 y 07.
 - [x] Fecha y salón definidos: 13 de febrero de 2027, Terraza en las Nubes, Santiago, N.L.
-- [ ] Elegir y registrar el dominio (`10-dominio.md`, verificar con `node scripts/check-domains.mjs`).
+- [x] Dominio elegido: `monichuy.mx` (D13).
+- [ ] Registrar `monichuy.mx` (y `monichuy.com` si sigue libre) y poner el DNS en Cloudflare.
 - [x] Almacenamiento de archivos: Cloudflare R2 (D12).
 - [ ] Confirmar el correo del administrador.
 
@@ -54,7 +55,7 @@ información y RSVP) esté listo antes de enviar las invitaciones, y las pruebas
 
 ## Fase 3 · Subida directa a R2 (semana 2)
 
-- [ ] Bucket R2 privado, dominio público `media.<dominio>`, credenciales S3 en variables de Pages.
+- [ ] Bucket R2 privado, dominio público `media.monichuy.mx`, credenciales S3 en variables de Pages.
 - [ ] `functions/lib/token.ts` (HMAC), `functions/lib/r2.ts` (presign), `functions/api/upload-url.ts`, `functions/api/media/confirm.ts`.
 - [ ] `src/lib/media.js`: `web`/`thumb` para fotos, validación y poster para video, duración de audio.
 - [ ] `src/lib/upload.js`: cola IndexedDB, concurrencia 2, prioridad foto > video, reintentos exponenciales, reanudación.

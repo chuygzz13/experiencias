@@ -191,7 +191,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
           <strong>Por qué no se cae:</strong> el día de la boda casi no hay servidor que saturar. La página vive en una red de distribución (CDN), cada foto viaja directo del celular al almacenamiento, y la base de datos sólo recibe una fila de texto por archivo. Lo único que puede saturarse es el WiFi del salón, y para eso hay un plan.
         </div>
         <div class="hero-meta">
-          <span>Sábado 13 de febrero de 2027 · Terraza en las Nubes, Santiago, N.L.</span>
+          <span>Sábado 13 de febrero de 2027 · Terraza en las Nubes, Santiago, N.L. · monichuy.mx</span>
           <span>Investigación completa en el repo: <code>docs/boda/01-investigacion-base.md</code></span>
           <span>Stack: React + Vite · Supabase Free · Cloudflare Pages + R2</span>
         </div>
@@ -235,8 +235,9 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
           <span class="chip"><strong>Costo mensual:</strong> cero (sin Supabase Pro)</span>
           <span class="chip"><strong>Administrador:</strong> sólo tú</span>
           <span class="chip"><strong>Archivos:</strong> Cloudflare R2</span>
+          <span class="chip"><strong>Dominio:</strong> monichuy.mx</span>
         </div>
-        <p class="prose muted">Lo pendiente de tu lado: el dominio (candidatos en <code>docs/boda/10-dominio.md</code>) y el correo con el que entrarás como administrador. Los archivos van a Cloudflare R2: al activarlo pide una tarjeta como verificación, sin cobro dentro de los 10 GB gratuitos.</p>
+        <p class="prose muted">Lo pendiente de tu lado: registrar <code>monichuy.mx</code> (y <code>monichuy.com</code> como respaldo si sigue libre) y el correo con el que entrarás como administrador. Los archivos van a Cloudflare R2: al activarlo pide una tarjeta como verificación, sin cobro dentro de los 10 GB gratuitos.</p>
       </section>
 
       <section id="invitados">
@@ -345,7 +346,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
               <tr><td>Archivos</td><td>Cloudflare R2</td><td>Fotos, videos y audios. 10 GB gratis, descargas gratis; el excedente cuesta 0.015 USD por GB al mes.</td><td class="n">≈ 3 a 5 MXN/mes si se llega a 25 GB</td></tr>
               <tr><td>Datos, tiempo real, acceso admin</td><td>Supabase Free</td><td>Sólo metadatos (una fila por archivo), Realtime para la pantalla, login de ustedes.</td><td class="n">0</td></tr>
               <tr><td>Anti-pausa</td><td>GitHub Actions programado o Worker con cron</td><td>Un ping cada 3 días evita que Supabase Free se pause por inactividad.</td><td class="n">0</td></tr>
-              <tr><td>Dominio</td><td>Registrador + DNS en Cloudflare</td><td>URL corta para las etiquetas y dominio propio para las imágenes.</td><td class="n">300 a 500 MXN/año</td></tr>
+              <tr><td>Dominio</td><td><code>monichuy.mx</code> (Akky o Porkbun) + DNS en Cloudflare</td><td>URL corta para las etiquetas; imágenes en <code>media.monichuy.mx</code>.</td><td class="n">≈ 500 a 900 MXN/año</td></tr>
               <tr><td>Etiquetas NFC</td><td>NTAG213, ~250 piezas</td><td>200 invitados + mesas + puntos fijos + 20 % de repuesto.</td><td class="n">2,500 a 6,000 MXN una vez</td></tr>
               <tr><td>Impresión</td><td>QR y letreros</td><td>Respaldo para celulares sin NFC.</td><td class="n">500 a 1,500 MXN una vez</td></tr>
             </tbody>
@@ -688,7 +689,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
           <h2>Siguiente paso</h2>
         </div>
         <div class="callout">
-          <p>Fecha y salón ya están definidos: sábado 13 de febrero de 2027 en Terraza en las Nubes, Santiago, Nuevo León. Los archivos van a Cloudflare R2 (decidido). Faltan dos decisiones: el dominio (candidatos y script de verificación en <code>docs/boda/10-dominio.md</code>) y el correo con el que entrarás como administrador. Con eso, el primer entregable es la migración a Vite con una URL funcionando en tu celular, y las invitaciones por WhatsApp pueden salir la semana del 7 de diciembre.</p>
+          <p>Fecha y salón ya están definidos: sábado 13 de febrero de 2027 en Terraza en las Nubes, Santiago, Nuevo León. Archivos en Cloudflare R2 y dominio <code>monichuy.mx</code> ya están decididos. Falta registrar el dominio y una sola decisión: el correo con el que entrarás como administrador. Con eso, el primer entregable es la migración a Vite con una URL funcionando en tu celular, y las invitaciones por WhatsApp pueden salir la semana del 7 de diciembre.</p>
         </div>
       </section>
 

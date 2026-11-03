@@ -15,7 +15,7 @@ Resumen visual: `08-propuesta.html` (también publicada en https://claude.ai/art
 | Tiempo real | Supabase Realtime | Free: 200 conexiones simultáneas, 2 M mensajes/mes | Pantalla `/tv` y panel `/admin` |
 | Acceso admin | Supabase Auth (magic link, registro público desactivado) | Free | Login exclusivo del dueño (`ADMIN_EMAIL`) |
 | Anti-pausa | GitHub Actions `schedule` o Worker con Cron Trigger | Free | `GET /api/keepalive` cada 3 días |
-| Dominio | Registrador + DNS en Cloudflare | 300 a 500 MXN/año | `boda.<dominio>` y `media.<dominio>` |
+| Dominio | Registrador (Akky o Porkbun) + DNS en Cloudflare | ≈ 500 a 900 MXN/año (`.mx`) | `monichuy.mx` y `media.monichuy.mx` |
 
 Decidido (D12): Cloudflare R2 para los archivos. Backblaze B2 queda como destino del respaldo final posterior a la boda
 (almacenamiento más barato) y como alternativa sólo si R2 no pudiera activarse. Vercel Hobby en lugar de Pages seguiría
@@ -25,7 +25,7 @@ siendo posible (las funciones se portan a serverless).
 
 ### 2.1 Entrada por etiqueta NFC o QR
 
-1. El celular abre `https://boda.<dominio>/t/<token>`.
+1. El celular abre `https://monichuy.mx/t/<token>`.
 2. El frontend llama `POST /api/resolve-token`. La función verifica la firma del token (sin tocar la base), luego consulta
    `tags` y devuelve invitado o mesa, más la configuración pública (fecha, WiFi, si la galería pide PIN).
 3. El resultado se guarda en `localStorage` (`guest`, `token`, `displayName`). No se vuelve a consultar en la noche.
@@ -59,7 +59,7 @@ rotando lo que ya tiene. Corre en una laptop con cable o hotspot propio, en Chro
 ### 2.4 Álbum en celulares
 
 Lista paginada por cursor (`created_at, id`) de 30 elementos desde la vista `media_public`; miniaturas desde
-`https://media.<dominio>/thumb/<uuid>.jpg` con `Cache-Control: public, max-age=31536000, immutable`; la versión `web`
+`https://media.monichuy.mx/thumb/<uuid>.jpg` con `Cache-Control: public, max-age=31536000, immutable`; la versión `web`
 sólo al abrir el visor. Refresco al volver a la pestaña o cada 60 s. Acceso con PIN (guardado en `localStorage`) o por token.
 
 ### 2.5 Mensajes, canciones y RSVP
@@ -350,7 +350,7 @@ Modo degradado de `upload-url`: si Supabase falla, la función igual firma (el t
 | Variable | Dónde | Uso |
 |---|---|---|
 | `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` | frontend | Lecturas públicas y Realtime |
-| `VITE_MEDIA_BASE_URL` | frontend | `https://media.<dominio>` |
+| `VITE_MEDIA_BASE_URL` | frontend | `https://media.monichuy.mx` |
 | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | funciones | Escrituras con service role |
 | `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` | funciones | Presign S3 |
 | `TOKEN_HMAC_SECRET` | funciones y script de generación de tokens | Firma `sig4` |
@@ -363,7 +363,7 @@ Se versiona `.env.example` con los nombres; los valores viven en Cloudflare (Pag
 
 - Rama principal → Cloudflare Pages producción; ramas de trabajo → URL de preview automática.
 - Migraciones con `supabase db push` o con el MCP de Supabase (`apply_migration`).
-- Keepalive: workflow de GitHub Actions `schedule: "0 9 */3 * *"` que hace `curl https://boda.<dominio>/api/keepalive`.
+- Keepalive: workflow de GitHub Actions `schedule: "0 9 */3 * *"` que hace `curl https://monichuy.mx/api/keepalive`.
 - Cabeceras en `public/_headers`: CSP, `X-Frame-Options`, `Referrer-Policy`, `X-Robots-Tag: noindex`.
 
 ## 8. Qué se reutiliza del prototipo actual

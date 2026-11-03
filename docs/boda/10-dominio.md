@@ -1,7 +1,7 @@
 # Dominio
 
-Estado: **pendiente de elegir y registrar**. Esta nota reúne criterios, candidatos y el procedimiento para verificar y
-comprar. La decisión final se registra en `02-decisiones.md` como D12.
+Estado: **decidido: `monichuy.mx`** (D13 en `02-decisiones.md`; el dueño verificó el 3 de noviembre de 2026 que está
+libre). Pendiente: registrarlo. Esta nota conserva los criterios, los candidatos evaluados y el procedimiento de compra.
 
 ## 1. Criterios
 
@@ -91,18 +91,18 @@ estará ahí), Porkbun o Namecheap (`.boda`, `.love`, `.wedding`, `.mx`), Akky (
 
 Presupuesto razonable: un principal `.com` o `.mx` más, si se quiere, un `.boda` que redirija: 500 a 1,300 MXN al año.
 
-## 5. Recomendación
+## 5. Decisión y pasos de compra
 
-1. Correr el script. Si `monicayjesus.com` está libre, registrarlo como principal y, opcionalmente, `monicayjesus.boda` para
-   QR, NFC y redes.
-2. Si el `.com` está tomado, principal `monicayjesus.mx`; si también, `moniyjesus.com` o `monicayjesus2027.com`.
-3. Registrar por dos años con renovación automática y privacidad WHOIS.
-4. Poner el DNS en Cloudflare (gratis) para usar Pages y el subdominio `media.` de R2.
-5. Alinear el hashtag con el dominio: `#MonicaYJesus2027` o `#MyJ2027`.
+Decidido: `monichuy.mx` como dominio principal (D13).
+
+1. Registrar `monichuy.mx` en Akky (NIC México) o Porkbun, por dos años, con renovación automática y privacidad WHOIS.
+2. Registrar también `monichuy.com` si sigue libre (≈ 250 MXN al año) y redirigirlo con 301 al `.mx`.
+3. Poner el DNS en Cloudflare (gratis) para usar Pages y el subdominio `media.monichuy.mx` de R2.
+4. Hashtag alineado: `#MoniChuy2027`.
 
 ## 6. Después de registrar
 
 - Anotar la decisión en `02-decisiones.md` (D12) y el dominio en `settings` y en las variables de Pages.
-- Configurar `media.<dominio>` como dominio público del bucket R2.
+- Configurar `media.monichuy.mx` como dominio público del bucket R2.
 - Reservar los subdominios: `www` (redirige al raíz) y, si se usa, el `.boda` redirigiendo con 301 al principal.
 - Verificar la vista previa al compartir el enlace por WhatsApp (Open Graph) antes de mandar invitaciones.
